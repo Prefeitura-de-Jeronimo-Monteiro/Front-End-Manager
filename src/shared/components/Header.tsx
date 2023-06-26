@@ -25,35 +25,20 @@ interface HeaderProps {
 export const Header = ({ isLogin }: HeaderProps) => {
   const { logout } = useContext(AuthContext);
 
-  const routesLoginFalse = [
-    { title: "Entrar", href: "login" },
-    { title: "Cadastrar-se", href: "register" },
-  ];
-
-  const routesLoginTrue = [{ title: "Dashboard", href: "dashboard" }];
+  const routes = [{ title: "Dashboard", href: "dashboard" }];
 
   return (
-    <header className="flex items-center justify-between w-screen px-4 py-2 bg-background-600">
+    <header
+      className={`${
+        isLogin ? "flex" : "hidden"
+      } items-center justify-between w-screen px-4 py-2 bg-background-600`}
+    >
       <Image src="/img/logo.png" alt="" width={112} height={112} />
 
       <ul className="flex gap-3 items-center">
-        {isLogin ? (
-          <>
-            {routesLoginTrue.map((route) => (
-              <Routes title={route.title} href={route.href} key={route.title} />
-            ))}
-            <button
-              onClick={logout}
-              className="py-2 px-4 bg-white rounded font-semibold"
-            >
-              Sair
-            </button>
-          </>
-        ) : (
-          routesLoginFalse.map((route) => (
-            <Routes title={route.title} href={route.href} key={route.title} />
-          ))
-        )}
+        {routes.map((route) => (
+          <Routes title={route.title} href={route.href} key={route.title} />
+        ))}
       </ul>
     </header>
   );

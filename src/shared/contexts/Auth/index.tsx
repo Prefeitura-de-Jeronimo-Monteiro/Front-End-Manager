@@ -10,7 +10,6 @@ import { getUserDataById } from "@/shared/services/User/view.service";
 interface AuthContextData {
   user: IUser;
   login: (data: IAuthData) => Promise<AxiosResponse>;
-  register: (data: IRegisterData) => Promise<AxiosResponse>;
   logout: () => void;
 }
 
@@ -73,16 +72,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return requestLogin;
   };
 
-  const register = async ({ email, password, name }: IRegisterData) => {
-    const requestRegister = await RegisterUser({ email, password, name });
-
-    if (requestRegister.status === 201) {
-      await Router.push("/login");
-    }
-
-    return requestRegister;
-  };
-
   const logout = async () => {
     destroyCookie(null, "BearerToken", {
       path: "/",
@@ -96,7 +85,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ login, register, logout, user }}>
+    <AuthContext.Provider value={{ login, logout, user }}>
       {children}
     </AuthContext.Provider>
   );
