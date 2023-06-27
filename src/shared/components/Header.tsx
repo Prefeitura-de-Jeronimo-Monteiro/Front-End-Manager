@@ -1,6 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
-import { useContext, Fragment } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../contexts/Auth";
 
 interface RoutesProps {
@@ -33,7 +32,8 @@ export const Header = ({ isLogin }: HeaderProps) => {
         isLogin ? "flex" : "hidden"
       } items-center justify-between w-screen px-4 py-2 bg-background-600`}
     >
-      <Image src="/img/logo.png" alt="" width={112} height={112} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/img/logo.png" alt="logo" className="w-28 h-28" />
 
       <ul className="flex gap-3 items-center">
         {routes.map((route) => (
