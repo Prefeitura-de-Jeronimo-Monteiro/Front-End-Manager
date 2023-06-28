@@ -49,6 +49,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       password,
     });
 
+    if (requestLogin.status == 202) {
+      setCookie(undefined, "tempUser", name, {
+        maxAge: 60 * 60 * 1,
+        path: "/",
+      });
+
+      await Router.push("user/reset-password");
+    }
+
     if (requestLogin.status === 200) {
       const token = requestLogin.data.access_token;
       const id = requestLogin.data.user.id;
@@ -78,11 +87,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     password,
     newPassword,
   }: IResetPassword) => {
-    const requestResetPassword = api().post("resetPassword", {
+    const requestResetPassword = await api().post("resetPassword", {
       name,
       password,
       newPassword,
     });
+
+    if (requestResetPassword.status === 200) {
+      destroyCookie(null, "tempUser", {
+        path: "/",
+      });
+    }
 
     return requestResetPassword;
   };

@@ -25,7 +25,7 @@ export default function Login() {
 
   const handleLogin = ({ name, password }: IAuthData) => {
     login({ name, password }).then(async (res) => {
-      await Router.push("/dashboard");
+      await Router.push("/");
     });
   };
 
@@ -35,7 +35,7 @@ export default function Login() {
         <title>Entrar</title>
       </Head>
 
-      <div className="flex flex-col w-screen h-screen items-center justify-center overflow-auto">
+      <div className="flex flex-col w-screen h-screen items-center justify-center overflow-auto select-none">
         <div className="flex flex-col items-center mb-4 gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/img/logo.png" alt="" className="w-52" />
@@ -86,9 +86,17 @@ export default function Login() {
                     iconLeft={<Lock size={24} />}
                     iconRight={
                       viewPassword ? (
-                        <Eye size={24} onClick={toggleViewPassword} />
+                        <Eye
+                          size={24}
+                          onClick={toggleViewPassword}
+                          className="cursor-pointer"
+                        />
                       ) : (
-                        <EyeClosed size={24} onClick={toggleViewPassword} />
+                        <EyeClosed
+                          size={24}
+                          onClick={toggleViewPassword}
+                          className="cursor-pointer"
+                        />
                       )
                     }
                     className="text-lg"
