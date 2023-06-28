@@ -1,3 +1,3 @@
 import api from "..";
 
-export const RegisterUser = (data: IRegisterData) => api.post("user", data);
+export const RegisterUser = (data) => api().post("user", data);

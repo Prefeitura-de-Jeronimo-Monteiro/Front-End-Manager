@@ -2,20 +2,18 @@ import { NextApiRequest } from "next";
 import { parseCookies } from "nookies";
 import axios from "axios";
 
-const requests = (ctx?: { req: NextApiRequest }) => {
+const api = (ctx?: { req: NextApiRequest }) => {
   const { BearerToken: token } = parseCookies(ctx);
 
-  const api = axios.create({
+  const requests = axios.create({
     baseURL: "http://localhost:3000",
   });
 
   if (token) {
-    api.defaults.headers["Authorization"] = `Bearer ${token}`;
+    requests.defaults.headers["Authorization"] = `Bearer ${token}`;
   }
 
-  return api;
+  return requests;
 };
-
-const api = requests();
 
 export default api;

@@ -2,14 +2,15 @@ import api from "@/shared/services";
 import { AxiosResponse } from "axios";
 import React, { createContext, useEffect, useState } from "react";
 import { setCookie, destroyCookie, parseCookies } from "nookies";
-import { RegisterUser } from "@/shared/services/User/create.service";
 import Router from "next/router";
 import { IUser } from "@/shared/interfaces/UserData";
 import { getUserDataById } from "@/shared/services/User/view.service";
+import { IResetPassword } from "@/shared/interfaces/ResetPasswordData";
 
 interface AuthContextData {
   user: IUser;
   login: (data: IAuthData) => Promise<AxiosResponse>;
+  resetPassword: (data: IResetPassword) => Promise<AxiosResponse>;
   logout: () => void;
 }
 
@@ -42,9 +43,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = async ({ email, password }: IAuthData) => {
-    const requestLogin = await api.post("login", {
-      email,
+  const login = async ({ name, password }: IAuthData) => {
+    const requestLogin = await api().post("login", {
+      name,
       password,
     });
 
@@ -72,6 +73,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return requestLogin;
   };
 
+  const resetPassword = async ({
+    name,
+    password,
+    newPassword,
+  }: IResetPassword) => {
+    const requestResetPassword = api().post("resetPassword", {
+      name,
+      password,
+      newPassword,
+    });
+
+    return requestResetPassword;
+  };
+
   const logout = async () => {
     destroyCookie(null, "BearerToken", {
       path: "/",
@@ -85,7 +100,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ login, logout, user }}>
+    <AuthContext.Provider value={{ login, logout, user, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );
