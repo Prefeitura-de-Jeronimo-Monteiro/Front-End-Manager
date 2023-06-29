@@ -1,5 +1,7 @@
 import { FormInput } from "@/shared/components/Input";
 import { IResgister } from "@/shared/interfaces/RegisterData";
+import { IRoles } from "@/shared/interfaces/RolesData";
+import api from "@/shared/services";
 import { RegisterUser } from "@/shared/services/User/create.service";
 import { Envelope, Eye, EyeClosed, User } from "@phosphor-icons/react";
 import { Field, Form, Formik } from "formik";
@@ -9,7 +11,11 @@ import { parseCookies } from "nookies";
 import { useState } from "react";
 import * as yup from "yup";
 
-export default function CreateUser() {
+interface CreateUserProps {
+  cargos: IRoles[];
+}
+
+export default function CreateUser({ cargos }: CreateUserProps) {
   const [viewPassword, setViewPassword] = useState<boolean>(false);
 
   const CreateUserSchema = yup.object().shape({
@@ -133,13 +139,16 @@ export default function CreateUser() {
                     as="select"
                     name="cargoId"
                     id="cargo"
-                    value=""
                     className="bg-transparent h-full w-full flex-1 placeholder:text-gray-400 outline-none cursor-pointer"
                   >
                     <option value="" disabled>
                       Selecione um cargo
                     </option>
-                    <option value="teste">Teste</option>
+                    {cargos.map((cargo) => (
+                      <option value={cargo.id} key={cargo.id}>
+                        {cargo.nome}
+                      </option>
+                    ))}
                   </Field>
                 </div>
               </div>
@@ -170,6 +179,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  let cargos;
+  try {
+    const response = await api().get("cargo");
+    if (response.status === 200) {
+      cargos = response.data.retorno;
+    }
+  } catch (error) {
+    cargos = [];
+  }
+
   let isLogin = false;
 
   token ? (isLogin = true) : isLogin;
@@ -177,6 +196,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       isLogin,
+      cargos,
     },
   };
 };

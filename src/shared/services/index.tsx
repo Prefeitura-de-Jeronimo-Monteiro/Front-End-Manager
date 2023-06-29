@@ -1,12 +1,23 @@
-import { NextApiRequest } from "next";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextApiRequest,
+} from "next";
 import { parseCookies } from "nookies";
 import axios from "axios";
+import https from "https";
 
-const api = (ctx?: { req: NextApiRequest }) => {
+const api = (ctx?: {
+  req?: NextApiRequest;
+  res?: GetServerSidePropsContext;
+}) => {
   const { BearerToken: token } = parseCookies(ctx);
 
   const requests = axios.create({
     baseURL: "https://localhost:44350/",
+    httpsAgent: new https.Agent({
+      rejectUnauthorized: false,
+    }),
   });
 
   if (token) {
