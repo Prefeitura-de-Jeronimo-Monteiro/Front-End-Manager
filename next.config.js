@@ -1,6 +1,13 @@
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-}
+  env: {
+    TOKEN_API_IMG: process.env.TOKEN_API_IMG,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

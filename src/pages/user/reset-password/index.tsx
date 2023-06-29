@@ -71,7 +71,7 @@ export default function Login({ name }: ResetPasswordProps) {
         <title>Alterar Senha</title>
       </Head>
 
-      <div className="flex flex-col w-screen h-screen items-center justify-center overflow-auto">
+      <div className="flex flex-col w-screen h-screen items-center justify-center overflow-auto select-none">
         <div className="flex flex-col items-center mb-4 gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/img/logo.png" alt="" className="w-52" />

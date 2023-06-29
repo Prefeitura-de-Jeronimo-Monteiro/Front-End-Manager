@@ -27,19 +27,19 @@ export const Header = ({ isLogin }: HeaderProps) => {
   const routes = [{ title: "Dashboard", href: "dashboard" }];
 
   return (
-    <header
-      className={`${
-        isLogin ? "flex" : "hidden"
-      } items-center justify-between w-screen px-4 py-2 bg-background-600`}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/img/logo.png" alt="logo" className="w-28 h-28" />
+    <>
+      {isLogin ? (
+        <header className="flex items-center justify-between w-screen px-4 py-2 bg-background-600">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/img/logo.png" alt="logo" className="w-28 h-28" />
 
-      <ul className="flex gap-3 items-center">
-        {routes.map((route) => (
-          <Routes title={route.title} href={route.href} key={route.title} />
-        ))}
-      </ul>
-    </header>
+          <ul className="flex gap-3 items-center">
+            {routes.map((route) => (
+              <Routes title={route.title} href={route.href} key={route.title} />
+            ))}
+          </ul>
+        </header>
+      ) : null}
+    </>
   );
 };

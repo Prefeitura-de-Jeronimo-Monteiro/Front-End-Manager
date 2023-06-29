@@ -6,7 +6,7 @@ const api = (ctx?: { req: NextApiRequest }) => {
   const { BearerToken: token } = parseCookies(ctx);
 
   const requests = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "https://localhost:44350/",
   });
 
   if (token) {
