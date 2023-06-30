@@ -1,8 +1,13 @@
+import Result from "@/shared/components/Result";
 import api from "@/shared/services";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
+import { useState } from "react";
 
 export default function Dashboard() {
+  const [result, setResult] = useState({ text: "Teste", status: false });
+  const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
+
   const vala = () => {
     const url = "https://api.imgbb.com/1/upload";
     const apiKey = process.env.TOKEN_API_IMG;
@@ -25,14 +30,28 @@ export default function Dashboard() {
       .post(url, formData.toString(), config)
       .then((response) => {
         console.log(response.data);
+        setResult({ text: "Deu bom!", status: true });
       })
       .catch((error) => {
         console.error(error);
-      });
+        setResult({ text: "Deu erro!", status: false });
+      })
+      .finally(toggleResult);
+  };
+
+  const toggleResult = () => {
+    setIsOpenResult(!isOpenResult);
   };
   return (
     <>
       <h1 onClick={vala}> Home</h1>
+
+      <Result
+        text={result.text}
+        status={result.status}
+        open={isOpenResult}
+        onClose={toggleResult}
+      />
     </>
   );
 }

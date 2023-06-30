@@ -9,13 +9,21 @@ import * as yup from "yup";
 import { AuthContext } from "@/shared/contexts/Auth";
 import { FormInput } from "@/shared/components/Input";
 import Head from "next/head";
+import Result from "@/shared/components/Result";
 
 export default function Login() {
   const { login } = useContext(AuthContext);
   const [viewPassword, setViewPassword] = useState<boolean>(false);
+  const [result, setResult] = useState({ text: "", status: false });
+  const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
+  const [submiting, setSubmiting] = useState<boolean>(false);
 
   const toggleViewPassword = () => {
     setViewPassword(!viewPassword);
+  };
+
+  const toggleResult = () => {
+    setIsOpenResult(!isOpenResult);
   };
 
   const LoginSchema = yup.object().shape({
@@ -27,9 +35,23 @@ export default function Login() {
   });
 
   const handleLogin = ({ usuario, senha }: IAuthData) => {
-    login({ usuario, senha }).then(async (res) => {
-      await Router.push("/");
-    });
+    setSubmiting(true);
+
+    login({ usuario, senha })
+      .then(async () => {
+        await Router.push("/");
+      })
+      .catch((err) => {
+        setResult({
+          text:
+            err.response.data || "Algo deu errado, tente novamente mais tarde!",
+          status: false,
+        });
+      })
+      .finally(() => {
+        setSubmiting(false);
+        toggleResult();
+      });
   };
 
   return (
@@ -107,7 +129,8 @@ export default function Login() {
 
               <button
                 type="submit"
-                className="bg-background-600 py-2 px-4 rounded-full text-white w-72 mt-8"
+                className={`bg-background-600 py-2 px-4 rounded-full text-white w-72 mt-8 disabled:opacity-70`}
+                disabled={submiting}
               >
                 Entrar
               </button>
@@ -115,6 +138,13 @@ export default function Login() {
           )}
         </Formik>
       </div>
+
+      <Result
+        text={result.text}
+        status={result.status}
+        open={isOpenResult}
+        onClose={toggleResult}
+      />
     </>
   );
 }

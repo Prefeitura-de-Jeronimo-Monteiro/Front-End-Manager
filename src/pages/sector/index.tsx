@@ -104,7 +104,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (!token) {
     return {
       redirect: {
-        destination: "user/login",
+        destination: "/user/login",
         permanent: false,
       },
     };
@@ -112,7 +112,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   let sectors;
   try {
-    const requestSector = await getSector();
+    const requestSector = await getSector(ctx);
 
     if (requestSector.status === 200) {
       sectors = requestSector.data.retorno;

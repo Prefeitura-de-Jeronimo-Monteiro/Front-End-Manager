@@ -1,3 +1,3 @@
 import api from "..";
 
-export const getUserDataById = (id: string) => api().get(`user/${id}`);
+export const getUserDataById = (id: string) => api().get(`usuario/${id}`);
