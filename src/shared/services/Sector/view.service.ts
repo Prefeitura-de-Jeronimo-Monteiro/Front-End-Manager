@@ -1,3 +1,5 @@
+import { GetServerSidePropsContext } from "next";
 import api from "..";
 
-export const getSector = () => api().get("setor");
+export const getSector = (ctx?: GetServerSidePropsContext) =>
+  api(ctx).get("setor");

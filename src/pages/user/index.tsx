@@ -201,10 +201,10 @@ export default function User({ cargos }: CreateUserProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { ["BearerToken"]: token } = parseCookies(ctx);
 
-  if (token) {
+  if (!token) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/user/login",
         permanent: false,
       },
     };
@@ -212,7 +212,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   let cargos;
   try {
-    const response = await api().get("cargo");
+    const response = await api(ctx).get("cargo");
+
     if (response.status === 200) {
       cargos = response.data.retorno;
     }

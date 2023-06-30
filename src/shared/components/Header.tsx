@@ -39,6 +39,10 @@ export const Header = ({ isLogin }: HeaderProps) => {
             {routes.map((route) => (
               <Routes title={route.title} href={route.href} key={route.title} />
             ))}
+
+            <button onClick={logout} className="text-white">
+              Sair
+            </button>
           </ul>
         </header>
       ) : null}

@@ -1,16 +1,9 @@
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  NextApiRequest,
-} from "next";
+import { GetServerSidePropsContext } from "next";
 import { parseCookies } from "nookies";
 import axios from "axios";
 import https from "https";
 
-const api = (ctx?: {
-  req?: NextApiRequest;
-  res?: GetServerSidePropsContext;
-}) => {
+const api = (ctx?: GetServerSidePropsContext) => {
   const { BearerToken: token } = parseCookies(ctx);
 
   const requests = axios.create({
