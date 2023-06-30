@@ -43,14 +43,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = async ({ name, password }: IAuthData) => {
-    const requestLogin = await api().post("login", {
-      name,
-      password,
+  const login = async ({ usuario, senha }: IAuthData) => {
+    const requestLogin = await api().post("autenticacao", {
+      usuario,
+      senha,
     });
 
     if (requestLogin.status == 202) {
-      setCookie(undefined, "tempUser", name, {
+      setCookie(undefined, "tempUser", usuario, {
         maxAge: 60 * 60 * 1,
         path: "/",
       });

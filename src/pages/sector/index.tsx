@@ -14,7 +14,7 @@ import { parseCookies } from "nookies";
 import { useState } from "react";
 
 interface SectorProps {
-  sectors: [];
+  sectors: ISector[];
 }
 
 export default function Sector({ sectors }: SectorProps) {
@@ -88,7 +88,7 @@ export default function Sector({ sectors }: SectorProps) {
       {viewSectors.length > 0 ? (
         <>
           {viewSectors.map((sector) => (
-            <div key={sector.nome}>{sector.nome}</div>
+            <div key={sector.id}>{sector.nome}</div>
           ))}
         </>
       ) : (

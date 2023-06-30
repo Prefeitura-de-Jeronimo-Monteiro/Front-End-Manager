@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import Router from "next/router";
-import { Eye, EyeClosed, Lock, User } from "@phosphor-icons/react";
+import { Envelope, Eye, EyeClosed, Lock } from "@phosphor-icons/react";
 import * as yup from "yup";
 
 import { AuthContext } from "@/shared/contexts/Auth";
@@ -19,12 +19,15 @@ export default function Login() {
   };
 
   const LoginSchema = yup.object().shape({
-    name: yup.string().required("Nome é um campo obrigatório"),
-    password: yup.string().required("Senha é um campo obrigatório"),
+    usuario: yup
+      .string()
+      .email("E-Mail não é válido")
+      .required("Nome é um campo obrigatório"),
+    senha: yup.string().required("Senha é um campo obrigatório"),
   });
 
-  const handleLogin = ({ name, password }: IAuthData) => {
-    login({ name, password }).then(async (res) => {
+  const handleLogin = ({ usuario, senha }: IAuthData) => {
+    login({ usuario, senha }).then(async (res) => {
       await Router.push("/");
     });
   };
@@ -45,44 +48,42 @@ export default function Login() {
         </div>
 
         <Formik
-          initialValues={{ name: "", password: "" }}
+          initialValues={{ usuario: "", senha: "" }}
           validationSchema={LoginSchema}
-          onSubmit={({ name, password }) => handleLogin({ name, password })}
+          onSubmit={({ usuario, senha }) => handleLogin({ usuario, senha })}
         >
           {({ errors, touched, values }) => (
             <Form className="flex flex-col items-center w-96 justify-center">
               <div className="flex flex-col w-full gap-8">
                 <div className="w-full">
-                  <label htmlFor="name" className="mb-2">
-                    Nome
+                  <label htmlFor="usuario" className="mb-2">
+                    E-Mail
                   </label>
 
                   <FormInput
-                    id="name"
-                    type="name"
-                    name="name"
+                    id="usuario"
+                    type="email"
+                    name="usuario"
                     placeholder="Nome"
-                    error={errors.name && touched.name ? errors.name : null}
-                    iconLeft={<User size={24} />}
+                    error={
+                      errors.usuario && touched.usuario ? errors.usuario : null
+                    }
+                    iconLeft={<Envelope size={24} />}
                     className="text-lg"
                   />
                 </div>
 
                 <div className="w-full">
-                  <label htmlFor="password" className="mb-2">
+                  <label htmlFor="senha" className="mb-2">
                     Senha
                   </label>
 
                   <FormInput
-                    id="password"
+                    id="senha"
                     type={viewPassword ? "text" : "password"}
-                    name="password"
+                    name="senha"
                     placeholder="********"
-                    error={
-                      errors.password && touched.password
-                        ? errors.password
-                        : null
-                    }
+                    error={errors.senha && touched.senha ? errors.senha : null}
                     iconLeft={<Lock size={24} />}
                     iconRight={
                       viewPassword ? (
