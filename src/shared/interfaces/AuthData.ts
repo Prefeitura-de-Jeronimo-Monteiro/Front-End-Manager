@@ -1,4 +1,4 @@
 interface IAuthData {
-    usuario: string;
-    senha: string;
+  usuario: string;
+  senha: string;
 }

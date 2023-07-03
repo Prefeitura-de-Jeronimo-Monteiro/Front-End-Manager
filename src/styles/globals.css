@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 30px #fff inset;
+  -webkit-box-shadow: 0 0 0 30px #fff inset;
 }
 
 /* Cor do texto do autocomplete */
 input:-webkit-autofill {
-    -webkit-text-fill-color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
 }
