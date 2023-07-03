@@ -42,11 +42,17 @@ export default function Login() {
         await Router.push("/");
       })
       .catch((err) => {
-        setResult({
-          text:
-            err.response.data || "Algo deu errado, tente novamente mais tarde!",
-          status: false,
-        });
+        try {
+          setResult({
+            text: err.response.data,
+            status: false,
+          });
+        } catch (error) {
+          setResult({
+            text: "Algo deu errado, tente novamente mais tarde!",
+            status: false,
+          });
+        }
       })
       .finally(() => {
         setSubmiting(false);
