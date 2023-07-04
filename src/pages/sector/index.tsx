@@ -4,7 +4,7 @@ import { Modal } from "@/shared/components/Modal";
 import { ISector } from "@/shared/interfaces/SectorData";
 import { RegisterSector } from "@/shared/services/Sector/create.service";
 import { getSector } from "@/shared/services/Sector/view.service";
-import { Plus } from "@phosphor-icons/react";
+import { Pencil, Plus, Trash } from "@phosphor-icons/react";
 import { Form, Formik } from "formik";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -84,11 +84,36 @@ export default function Sector({ sectors }: SectorProps) {
       </div>
 
       {viewSectors.length > 0 ? (
-        <>
-          {viewSectors.map((sector) => (
-            <div key={sector.id}>{sector.nome}</div>
-          ))}
-        </>
+        <div className="my-4 mx-8 w-screen">
+          <table className="w-full">
+            <thead className="text-left">
+              <tr>
+                <th className="text-xl mb-2 ">Nome</th>
+              </tr>
+            </thead>
+            <tbody className="text-left flex gap-3 flex-col">
+              {viewSectors.map((sector) => (
+                <tr key={sector.id}>
+                  <th className="flex items-center gap-4">
+                    <button className="py-2 px-4 bg-gray-500 text-white w-60 font-semibold text-2xl">
+                      {sector.nome}
+                    </button>
+
+                    <div className="flex gap-2">
+                      <button className="text-blue-500 shadow-md border p-2">
+                        <Pencil size={32} />
+                      </button>
+
+                      <button className="text-red-500 shadow-md border p-2">
+                        <Trash size={32} />
+                      </button>
+                    </div>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
         <Empty />
       )}
