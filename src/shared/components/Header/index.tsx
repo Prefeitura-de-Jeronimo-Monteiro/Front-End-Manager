@@ -42,7 +42,11 @@ export const Header = ({ isLogin }: HeaderProps) => {
         <>
           <header className="flex items-center justify-between w-screen px-4 py-2 bg-background-600">
             <Drawer isOpen={isOpenDrawer} onClose={toggleDrawer}>
-              <NestedRoutes routes={routes} onToggleOpen={handleToggleOpen} />
+              <NestedRoutes
+                routes={routes}
+                onToggleOpen={handleToggleOpen}
+                onClose={toggleDrawer}
+              />
             </Drawer>
 
             <div onClick={toggleDrawer} className="text-white cursor-pointer">

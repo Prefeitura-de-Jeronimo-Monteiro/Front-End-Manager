@@ -1,5 +1,4 @@
 import { Check, WarningDiamond, X } from "@phosphor-icons/react";
-import { useEffect } from "react";
 
 interface ResultProps {
   text: string;
@@ -8,25 +7,13 @@ interface ResultProps {
   onClose: () => void;
 }
 
-export default function Result({ text, status, open, onClose }: ResultProps) {
-  useEffect(() => {
-    if (open) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, 5000);
-
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, [open, onClose]);
-
+export const Result = ({ text, status, open, onClose }: ResultProps) => {
   return (
     <>
       {open ? (
         <div
           className={`${
-            status ? "bg-green-400" : "bg-red-400"
+            status ? "bg-green-600" : "bg-red-600"
           } absolute bottom-2 left-2 flex items-center gap-6  text-white rounded py-1 px-2`}
         >
           {status ? (
@@ -39,9 +26,14 @@ export default function Result({ text, status, open, onClose }: ResultProps) {
             </div>
           )}
 
-          <X onClick={onClose} weight="bold" />
+          <X
+            onClick={onClose}
+            size={20}
+            weight="bold"
+            className="cursor-pointer"
+          />
         </div>
       ) : null}
     </>
   );
-}
+};

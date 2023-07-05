@@ -9,7 +9,7 @@ import * as yup from "yup";
 import { AuthContext } from "@/shared/contexts/Auth";
 import { FormInput } from "@/shared/components/Input";
 import Head from "next/head";
-import Result from "@/shared/components/Result";
+import { Result } from "@/shared/components/Result";
 
 export default function Login() {
   const { login } = useContext(AuthContext);

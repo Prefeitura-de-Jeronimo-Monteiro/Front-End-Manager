@@ -1,5 +1,5 @@
 import { Card } from "@/shared/components/Card";
-import Result from "@/shared/components/Result";
+import { Result } from "@/shared/components/Result";
 import api from "@/shared/services";
 import { User } from "@phosphor-icons/react";
 import { GetServerSideProps } from "next";

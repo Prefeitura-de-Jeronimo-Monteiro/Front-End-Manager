@@ -1,15 +1,19 @@
-import { Empty } from "@/shared/components/Empty";
-import { FormInput } from "@/shared/components/Input";
-import { Modal } from "@/shared/components/Modal";
 import { ISector } from "@/shared/interfaces/SectorData";
 import { RegisterSector } from "@/shared/services/Sector/create.service";
+import { DeleteSectorRequest } from "@/shared/services/Sector/delete.service";
 import { getSector } from "@/shared/services/Sector/view.service";
-import { Pencil, Plus, Trash } from "@phosphor-icons/react";
+import { Check, Pencil, Plus, Trash, X } from "@phosphor-icons/react";
 import { Form, Formik } from "formik";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { parseCookies } from "nookies";
 import { useState } from "react";
+
+// Components
+import { Empty } from "@/shared/components/Empty";
+import { FormInput } from "@/shared/components/Input";
+import { Modal } from "@/shared/components/Modal";
+import { Result } from "@/shared/components/Result";
 
 interface SectorProps {
   sectors: ISector[];
@@ -17,10 +21,29 @@ interface SectorProps {
 
 export default function Sector({ sectors }: SectorProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [viewSectors, setViewSectors] = useState<ISector[]>(sectors);
+  const [deleteSectors, setDeleteSectors] = useState<ISector>({
+    id: "",
+    nome: "",
+  });
+  const [result, setResult] = useState({ text: "Teste", status: false });
+  const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
 
   const toggleIsOpen = () => {
     setIsOpen(!isOpen);
+
+    setIsOpenResult(false);
+  };
+
+  const toggleIsOpenModal = () => {
+    setIsOpenModal(!isOpenModal);
+
+    setIsOpenResult(false);
+  };
+
+  const toggleResult = () => {
+    setIsOpenResult(!isOpenResult);
   };
 
   const getSectors = () => {
@@ -32,12 +55,91 @@ export default function Sector({ sectors }: SectorProps) {
   };
 
   const handleCreateSector = ({ nome }: ISector) => {
+    setIsOpenResult(false);
+
     RegisterSector({ nome })
-      .then(() => {
+      .then((res) => {
+        setResult({
+          text: res.data.retorno,
+          status: true,
+        });
+
         getSectors();
         toggleIsOpen();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        try {
+          setResult({
+            text: err.response.data,
+            status: false,
+          });
+        } catch (error) {
+          setResult({
+            text: "Algo deu errado, tente novamente mais tarde!",
+            status: false,
+          });
+        }
+      })
+      .finally(() => {
+        toggleResult();
+      });
+  };
+
+  const deleteSector = (id?: string) => {
+    setIsOpenResult(false);
+
+    if (id) {
+      DeleteSectorRequest(id)
+        .then((res) => {
+          setResult({ text: res.data.retorno, status: true });
+
+          getSectors();
+          toggleIsOpenModal();
+          clearDeleteSector();
+        })
+        .catch((err) => {
+          try {
+            setResult({
+              text: err.response.data,
+              status: false,
+            });
+          } catch (error) {
+            setResult({
+              text: "Algo deu errado, tente novamente mais tarde!",
+              status: false,
+            });
+          }
+        })
+        .finally(() => {
+          toggleResult();
+        });
+    } else {
+      DeleteSectorRequest("")
+        .catch((err) => {
+          try {
+            setResult({
+              text: err.response.data,
+              status: false,
+            });
+          } catch (error) {
+            setResult({
+              text: "Algo deu errado, tente novamente mais tarde!",
+              status: false,
+            });
+          }
+        })
+        .finally(() => {
+          getSectors();
+          toggleResult();
+        });
+    }
+  };
+
+  const clearDeleteSector = () => {
+    setDeleteSectors({
+      id: "",
+      nome: "",
+    });
   };
 
   return (
@@ -104,7 +206,17 @@ export default function Sector({ sectors }: SectorProps) {
                         <Pencil size={32} />
                       </button>
 
-                      <button className="text-red-500 shadow-md border p-2">
+                      <button
+                        className="text-red-500 shadow-md border p-2"
+                        onClick={() => {
+                          setDeleteSectors({
+                            id: sector.id,
+                            nome: sector.nome,
+                          });
+
+                          toggleIsOpenModal();
+                        }}
+                      >
                         <Trash size={32} />
                       </button>
                     </div>
@@ -113,10 +225,43 @@ export default function Sector({ sectors }: SectorProps) {
               ))}
             </tbody>
           </table>
+
+          <Modal onClose={toggleIsOpenModal} isOpen={isOpenModal}>
+            <div className="w-80 text-center">
+              <h1 className="mb-4 font-semibold text-xl">
+                Tem certeza que dejesa deletar o {deleteSectors?.nome}
+              </h1>
+
+              <div className="flex justify-center gap-6 my-2">
+                <button
+                  className="bg-white py-1 px-2 rounded text-green-600"
+                  onClick={() => deleteSector(deleteSectors.id)}
+                >
+                  <Check size={32} />
+                </button>
+                <button
+                  className="bg-white py-1 px-2 rounded text-red-600"
+                  onClick={() => {
+                    clearDeleteSector();
+                    toggleIsOpenModal();
+                  }}
+                >
+                  <X size={32} />
+                </button>
+              </div>
+            </div>
+          </Modal>
         </div>
       ) : (
         <Empty />
       )}
+
+      <Result
+        text={result.text}
+        status={result.status}
+        open={isOpenResult}
+        onClose={toggleResult}
+      />
     </>
   );
 }
