@@ -92,7 +92,7 @@ export default function Login() {
                     id="usuario"
                     type="email"
                     name="usuario"
-                    placeholder="Nome"
+                    placeholder="E-Mail"
                     error={
                       errors.usuario && touched.usuario ? errors.usuario : null
                     }

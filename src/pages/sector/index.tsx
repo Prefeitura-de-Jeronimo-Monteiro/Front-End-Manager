@@ -1,25 +1,28 @@
-import { ISector } from "@/shared/interfaces/SectorData";
+import { useState } from "react";
+import { parseCookies } from "nookies";
+import { GetServerSideProps } from "next";
+import Head from "next/head";
+
+// Libs
+import { Check, Pencil, Plus, Trash, X } from "@phosphor-icons/react";
+import { Form, Formik } from "formik";
+
+// Services
 import { RegisterSector } from "@/shared/services/Sector/create.service";
 import { DeleteSectorRequest } from "@/shared/services/Sector/delete.service";
 import { getSector } from "@/shared/services/Sector/view.service";
-import { Check, Pencil, Plus, Trash, X } from "@phosphor-icons/react";
-import { Form, Formik } from "formik";
-import { GetServerSideProps } from "next";
-import Head from "next/head";
-import { parseCookies } from "nookies";
-import { useState } from "react";
+
+// Interfaces
+import { ISector } from "@/shared/interfaces/SectorData";
 
 // Components
 import { Empty } from "@/shared/components/Empty";
 import { FormInput } from "@/shared/components/Input";
 import { Modal } from "@/shared/components/Modal";
 import { Result } from "@/shared/components/Result";
+import { updateSectorRequest } from "@/shared/services/Sector/update.service";
 
-interface SectorProps {
-  sectors: ISector[];
-}
-
-export default function Sector({ sectors }: SectorProps) {
+export default function Sector({ sectors }: { sectors: ISector[] }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [viewSectors, setViewSectors] = useState<ISector[]>(sectors);
@@ -142,6 +145,42 @@ export default function Sector({ sectors }: SectorProps) {
     });
   };
 
+  const handleEdit = (id?: string) => {
+    const updatedSectors = viewSectors.map((sector) => {
+      if (sector.id === id) {
+        return { ...sector, isEdit: !sector.isEdit };
+      }
+
+      return sector;
+    });
+
+    setViewSectors(updatedSectors);
+  };
+
+  const submitEdit = ({ nome, id }: ISector) => {
+    console.log(id);
+
+    updateSectorRequest({ nome, id })
+      .then((res) => {
+        getSectors();
+        handleEdit(id);
+
+        setResult({
+          text: res.data.retorno,
+          status: true,
+        });
+      })
+      .catch((err) => {
+        setResult({
+          text: "Algo deu errado, tente novamente mais tarde!",
+          status: false,
+        });
+      })
+      .finally(() => {
+        toggleResult();
+      });
+  };
+
   return (
     <>
       <Head>
@@ -196,31 +235,78 @@ export default function Sector({ sectors }: SectorProps) {
             <tbody className="text-left flex gap-3 flex-col">
               {viewSectors.map((sector) => (
                 <tr key={sector.id}>
-                  <th className="flex items-center gap-4">
-                    <button className="py-2 px-4 bg-gray-500 text-white w-60 font-semibold text-2xl">
-                      {sector.nome}
-                    </button>
-
-                    <div className="flex gap-2">
-                      <button className="text-blue-500 shadow-md border p-2">
-                        <Pencil size={32} />
-                      </button>
-
-                      <button
-                        className="text-red-500 shadow-md border p-2"
-                        onClick={() => {
-                          setDeleteSectors({
-                            id: sector.id,
-                            nome: sector.nome,
-                          });
-
-                          toggleIsOpenModal();
-                        }}
+                  {sector.isEdit ? (
+                    <th className="flex items-center gap-4">
+                      <Formik
+                        onSubmit={({ nome }) =>
+                          submitEdit({ nome, id: sector.id })
+                        }
+                        initialValues={{ nome: "" }}
                       >
-                        <Trash size={32} />
+                        {({ errors, touched }) => (
+                          <Form className="flex items-center gap-4">
+                            <FormInput
+                              name="nome"
+                              id="nome"
+                              error={
+                                errors.nome && touched.nome ? errors.nome : null
+                              }
+                              className="w-60"
+                            />
+                            <div className="flex gap-2">
+                              <button
+                                className="text-green-500 shadow-md border p-2"
+                                type="submit"
+                              >
+                                <Check size={32} />
+                              </button>
+
+                              <button
+                                className="text-red-500 shadow-md border p-2"
+                                type="button"
+                                onClick={() => {
+                                  handleEdit(sector.id);
+                                }}
+                              >
+                                <X size={32} />
+                              </button>
+                            </div>
+                          </Form>
+                        )}
+                      </Formik>
+                    </th>
+                  ) : (
+                    <th className="flex items-center gap-4">
+                      <button className="py-2 px-4 bg-gray-500 text-white w-60 font-semibold text-2xl">
+                        {sector.nome}
                       </button>
-                    </div>
-                  </th>
+
+                      <div className="flex gap-2">
+                        <button
+                          className="text-blue-500 shadow-md border p-2"
+                          onClick={() => {
+                            handleEdit(sector.id);
+                          }}
+                        >
+                          <Pencil size={32} />
+                        </button>
+
+                        <button
+                          className="text-red-500 shadow-md border p-2"
+                          onClick={() => {
+                            setDeleteSectors({
+                              id: sector.id,
+                              nome: sector.nome,
+                            });
+
+                            toggleIsOpenModal();
+                          }}
+                        >
+                          <Trash size={32} />
+                        </button>
+                      </div>
+                    </th>
+                  )}
                 </tr>
               ))}
             </tbody>

@@ -36,6 +36,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .catch(() => {
           logout();
         });
+    } else {
+      logout();
     }
   }, []);
 
