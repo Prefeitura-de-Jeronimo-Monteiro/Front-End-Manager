@@ -1,11 +1,12 @@
 import { Card } from "@/shared/components/Card";
-import Result from "@/shared/components/Result";
+import { Result } from "@/shared/components/Result";
 import api from "@/shared/services";
+import { getChamados } from "@/shared/services/Called/view.service";
 import { User } from "@phosphor-icons/react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { parseCookies } from "nookies";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   const [result, setResult] = useState({ text: "Teste", status: false });
@@ -90,6 +91,14 @@ export default function Dashboard() {
   const toggleResult = () => {
     setIsOpenResult(!isOpenResult);
   };
+
+  const requestCalled = () => {
+    getChamados().then((res) => console.log(res));
+  };
+
+  useEffect(() => {
+    requestCalled();
+  }, []);
 
   return (
     <>

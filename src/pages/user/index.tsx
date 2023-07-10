@@ -1,3 +1,4 @@
+import { Error } from "@/shared/components/Error";
 import { FormInput } from "@/shared/components/Input";
 import { Modal } from "@/shared/components/Modal";
 import { IResgister } from "@/shared/interfaces/RegisterData";
@@ -9,6 +10,7 @@ import {
   Eye,
   EyeClosed,
   User as IconUser,
+  Plus,
 } from "@phosphor-icons/react";
 import { Field, Form, Formik } from "formik";
 import { GetServerSideProps } from "next";
@@ -34,7 +36,7 @@ export default function User({ cargos }: CreateUserProps) {
     nome: yup.string().required(),
     sobrenome: yup.string().required(),
     senha: yup.string().min(8).required(),
-    cargoId: yup.string(),
+    cargoId: yup.string().required(),
   });
 
   const toggleViewPassword = () => {
@@ -85,7 +87,10 @@ export default function User({ cargos }: CreateUserProps) {
             <Form className="flex flex-col justify-center items-center max-w-4xl px-4">
               <div className="w-full my-3">
                 <label className="cursor-pointer" htmlFor="email">
-                  E-Mail
+                  E-Mail{" "}
+                  <span className="text-xs italic">
+                    (Será enviado um e-mail com a senha temporária)
+                  </span>
                 </label>
                 <FormInput
                   id="email"
@@ -171,7 +176,14 @@ export default function User({ cargos }: CreateUserProps) {
                       </option>
                     ))}
                   </Field>
+                  <button className="flex gap-2 items-center" type="button">
+                    <Plus size={18} weight="bold" /> Criar
+                  </button>
                 </div>
+
+                {errors.cargoId && touched.cargoId ? (
+                  <Error text={errors.cargoId} />
+                ) : null}
               </div>
 
               <button

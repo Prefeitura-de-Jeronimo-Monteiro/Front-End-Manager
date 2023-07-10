@@ -5,14 +5,19 @@ import { Fragment } from "react";
 
 interface RouteData extends IRoutes {
   onClick?: () => void;
+  onClose?: () => void;
 }
 
-const Routes = ({ href, title, icon, onClick }: RouteData) => {
+const Routes = ({ href, title, icon, onClick, onClose }: RouteData) => {
   return (
     <>
       <li className="select-none">
         {href ? (
-          <Link href={href} className="flex items-center gap-2">
+          <Link
+            href={href}
+            className="flex items-center gap-2"
+            onClick={onClose}
+          >
             {icon} {title}
           </Link>
         ) : (
@@ -37,9 +42,11 @@ const Routes = ({ href, title, icon, onClick }: RouteData) => {
 export const NestedRoutes = ({
   routes,
   onToggleOpen,
+  onClose,
 }: {
   routes: IRoutes[];
   onToggleOpen: (title: string) => void;
+  onClose?: () => void;
 }) => {
   return (
     <ul className="space-y-2 ml-2 py-2">
@@ -50,16 +57,24 @@ export const NestedRoutes = ({
               title={route.title}
               icon={route.icon}
               href={route.href}
-              onClick={() => onToggleOpen(route.title)}
+              onClick={() => {
+                onToggleOpen(route.title);
+              }}
             />
           ) : (
-            <Routes href={route.href} title={route.title} icon={route.icon} />
+            <Routes
+              href={route.href}
+              title={route.title}
+              icon={route.icon}
+              onClose={onClose}
+            />
           )}
           {route.children && route.open ? (
             <li className="ml-8">
               <NestedRoutes
                 routes={route.children}
                 onToggleOpen={onToggleOpen}
+                onClose={onClose}
               />
             </li>
           ) : null}
