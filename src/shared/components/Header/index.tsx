@@ -15,7 +15,7 @@ interface HeaderProps {
 export const Header = ({ isLogin }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
   const [routes, setRoutes] = useState<IRoutes[]>(RoutesProps);
 
   const toggleDropdown = () => {
@@ -36,6 +36,7 @@ export const Header = ({ isLogin }: HeaderProps) => {
 
     setRoutes(updatedRoutes);
   };
+
   return (
     <>
       {isLogin ? (
@@ -53,20 +54,21 @@ export const Header = ({ isLogin }: HeaderProps) => {
               <List size={32} />
             </div>
 
-            <div className="relative inline-block z-10">
-              <div
-                className="cursor-pointer rounded-full bg-white p-2 select-none"
-                onClick={toggleDropdown}
-              >
+            <div
+              className="flex relative items-center gap-2 z-10 cursor-pointer"
+              onClick={toggleDropdown}
+            >
+              <span className="text-white">{user.name}</span>
+              <div className="rounded-full bg-white p-2 select-none">
                 <Image src="/img/user.png" alt="Teste" width={32} height={32} />
               </div>
 
               {isOpen && (
                 <>
-                  <div className="absolute top-full text-center right-0 mt-2 w-28 bg-white divide-y divide-gray-100 rounded-lg shadow">
+                  <div className="absolute border top-full text-center right-0 mt-3 w-28 bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
                     <Link
                       href="/user/update"
-                      className="block px-4 py-2 hover:bg-gray-100"
+                      className="block px-4 py-2 hover:bg-gray-100 rounded-ss-lg rounded-se-lg"
                       onClick={toggleDropdown}
                     >
                       Perfil
@@ -77,7 +79,7 @@ export const Header = ({ isLogin }: HeaderProps) => {
                         toggleDropdown();
                         logout();
                       }}
-                      className="block w-full px-4 py-2 hover:bg-gray-100"
+                      className="block w-full px-4 py-2 hover:bg-gray-100 rounded-ee-lg rounded-es-lg"
                     >
                       Sair
                     </button>

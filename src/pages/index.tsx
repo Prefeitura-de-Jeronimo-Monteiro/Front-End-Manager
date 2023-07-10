@@ -8,9 +8,12 @@ import Head from "next/head";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 
-export default function Dashboard() {
-  const [result, setResult] = useState({ text: "Teste", status: false });
-  const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
+interface DashboardProps {
+  calleds: [];
+}
+
+export default function Dashboard({ calleds }: DashboardProps) {
+  const [viewCalleds, setViewCalleds] = useState(calleds);
 
   const cardInfos = [
     {
@@ -57,41 +60,6 @@ export default function Dashboard() {
     },
   ];
 
-  const teste = () => {
-    const url = "https://api.imgbb.com/1/upload";
-    const apiKey = process.env.TOKEN_API_IMG;
-    const imageUrl = "https://picsum.photos/200/300";
-
-    const config = {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      params: {
-        expiration: 600,
-        key: apiKey,
-      },
-    };
-
-    const formData = new URLSearchParams();
-    formData.append("image", imageUrl);
-
-    api()
-      .post(url, formData.toString(), config)
-      .then((response) => {
-        console.log(response.data);
-        setResult({ text: "Deu bom!", status: true });
-      })
-      .catch((error) => {
-        console.error(error);
-        setResult({ text: "Deu erro!", status: false });
-      })
-      .finally(toggleResult);
-  };
-
-  const toggleResult = () => {
-    setIsOpenResult(!isOpenResult);
-  };
-
   const requestCalled = () => {
     getChamados().then((res) => console.log(res));
   };
@@ -135,13 +103,6 @@ export default function Dashboard() {
           </tbody>
         </table>
       </div>
-
-      <Result
-        text={result.text}
-        status={result.status}
-        open={isOpenResult}
-        onClose={toggleResult}
-      />
     </>
   );
 }
@@ -158,6 +119,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  let calleds;
+
+  try {
+    const requestSector = await getChamados(ctx);
+
+    if (requestSector.status === 200) {
+      calleds = requestSector.data.retorno;
+    }
+  } catch (err) {
+    calleds = [];
+  }
+
   let isLogin = false;
 
   token ? (isLogin = true) : isLogin;
@@ -165,6 +138,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       isLogin,
+      calleds,
     },
   };
 };
