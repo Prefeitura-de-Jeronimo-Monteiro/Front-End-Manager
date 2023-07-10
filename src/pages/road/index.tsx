@@ -8,13 +8,10 @@ import { Form, Formik } from "formik";
 import { parseCookies } from "nookies";
 
 // Services
-import { RegisterSector } from "@/shared/services/Sector/create.service";
-import { DeleteSectorRequest } from "@/shared/services/Sector/delete.service";
-import { getSector } from "@/shared/services/Sector/view.service";
-import { updateSectorRequest } from "@/shared/services/Sector/update.service";
-
-// Interfaces
-import { ISector } from "@/shared/interfaces/SectorData";
+import { RegisterRoad } from "@/shared/services/Road/create.service";
+import { DeleteRoadRequest } from "@/shared/services/Road/delete.service";
+import { getRoad } from "@/shared/services/Road/view.service";
+import { updateRoadRequest } from "@/shared/services/Road/update.service";
 
 // Components
 import { Empty } from "@/shared/components/Empty";
@@ -22,11 +19,14 @@ import { FormInput } from "@/shared/components/Input";
 import { Modal } from "@/shared/components/Modal";
 import { Result } from "@/shared/components/Result";
 
-export default function Sector({ sectors }: { sectors: ISector[] }) {
+// Interfaces
+import { IRoad } from "@/shared/interfaces/RoadData";
+
+export default function Road({ road }: { road: IRoad[] }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [viewSectors, setViewSectors] = useState<ISector[]>(sectors);
-  const [deleteSectors, setDeleteSectors] = useState<ISector>({
+  const [viewRoads, setViewRoads] = useState<IRoad[]>(road);
+  const [deleteRoads, setDeleteRoad] = useState<IRoad>({
     id: "",
     nome: "",
   });
@@ -49,25 +49,25 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
     setIsOpenResult(!isOpenResult);
   };
 
-  const getSectors = () => {
-    getSector()
+  const getRoads = () => {
+    getRoad()
       .then((res) => {
-        setViewSectors(res.data.retorno);
+        setViewRoads(res.data.retorno);
       })
       .catch((err) => console.log(err));
   };
 
-  const handleCreateSector = ({ nome }: ISector) => {
+  const handleCreateRoad = ({ nome }: IRoad) => {
     setIsOpenResult(false);
 
-    RegisterSector({ nome })
+    RegisterRoad({ nome })
       .then((res) => {
         setResult({
           text: res.data.retorno,
           status: true,
         });
 
-        getSectors();
+        getRoads();
         toggleIsOpen();
       })
       .catch((err) => {
@@ -88,17 +88,17 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
       });
   };
 
-  const deleteSector = (id?: string) => {
+  const deleteRoad = (id?: string) => {
     setIsOpenResult(false);
 
     if (id) {
-      DeleteSectorRequest(id)
+      DeleteRoadRequest(id)
         .then((res) => {
           setResult({ text: res.data.retorno, status: true });
 
-          getSectors();
+          getRoads();
           toggleIsOpenModal();
-          clearDeleteSector();
+          clearDeleteRoad();
         })
         .catch((err) => {
           try {
@@ -117,7 +117,7 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
           toggleResult();
         });
     } else {
-      DeleteSectorRequest("")
+      DeleteRoadRequest("")
         .catch((err) => {
           try {
             setResult({
@@ -132,37 +132,37 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
           }
         })
         .finally(() => {
-          getSectors();
+          getRoads();
           toggleResult();
         });
     }
   };
 
-  const clearDeleteSector = () => {
-    setDeleteSectors({
+  const clearDeleteRoad = () => {
+    setDeleteRoad({
       id: "",
       nome: "",
     });
   };
 
   const handleEdit = (id?: string) => {
-    const updatedSectors = viewSectors.map((sector) => {
-      if (sector.id === id) {
-        return { ...sector, isEdit: !sector.isEdit };
+    const updatedroad = viewRoads.map((road) => {
+      if (road.id === id) {
+        return { ...road, isEdit: !road.isEdit };
       }
 
-      return sector;
+      return road;
     });
 
-    setViewSectors(updatedSectors);
+    setViewRoads(updatedroad);
   };
 
-  const submitEdit = ({ nome, id }: ISector) => {
+  const submitEdit = ({ nome, id }: IRoad) => {
     console.log(id);
 
-    updateSectorRequest({ nome, id })
+    updateRoadRequest({ nome, id })
       .then((res) => {
-        getSectors();
+        getRoads();
         handleEdit(id);
 
         setResult({
@@ -184,19 +184,19 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
   return (
     <>
       <Head>
-        <title>Setores</title>
+        <title>Ruas</title>
       </Head>
 
       <Modal isOpen={isOpen} onClose={toggleIsOpen}>
         <Formik
           initialValues={{ nome: "" }}
-          onSubmit={({ nome }) => handleCreateSector({ nome })}
+          onSubmit={({ nome }) => handleCreateRoad({ nome })}
         >
           {({ errors, touched }) => (
             <Form className="flex flex-col items-center gap-4 px-4">
-              <h1 className="font-bold text-2xl">Criar Setores</h1>
+              <h1 className="font-bold text-2xl">Criar Rua</h1>
               <div>
-                <label htmlFor="nome">Nome do Setor</label>
+                <label htmlFor="nome">Nome da Rua</label>
                 <FormInput
                   name="nome"
                   id="nome"
@@ -208,7 +208,7 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
                 type="submit"
                 className="py-2 px-4 bg-white text-black rounded font-semibold"
               >
-                Criar Setor
+                Criar Rua
               </button>
             </Form>
           )}
@@ -224,7 +224,7 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
         </button>
       </div>
 
-      {viewSectors.length > 0 ? (
+      {viewRoads.length > 0 ? (
         <div className="my-4 mx-8 w-screen">
           <table className="w-full">
             <thead className="text-left">
@@ -233,13 +233,13 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
               </tr>
             </thead>
             <tbody className="text-left flex gap-3 flex-col">
-              {viewSectors.map((sector) => (
-                <tr key={sector.id}>
-                  {sector.isEdit ? (
+              {viewRoads.map((road) => (
+                <tr key={road.id}>
+                  {road.isEdit ? (
                     <th className="flex items-center gap-4">
                       <Formik
                         onSubmit={({ nome }) =>
-                          submitEdit({ nome, id: sector.id })
+                          submitEdit({ nome, id: road.id })
                         }
                         initialValues={{ nome: "" }}
                       >
@@ -265,7 +265,7 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
                                 className="text-red-500 shadow-md border p-2"
                                 type="button"
                                 onClick={() => {
-                                  handleEdit(sector.id);
+                                  handleEdit(road.id);
                                 }}
                               >
                                 <X size={32} />
@@ -278,14 +278,14 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
                   ) : (
                     <th className="flex items-center gap-4">
                       <button className="py-2 px-4 bg-gray-500 text-white w-60 font-semibold text-2xl">
-                        {sector.nome}
+                        {road.nome}
                       </button>
 
                       <div className="flex gap-2">
                         <button
                           className="text-blue-500 shadow-md border p-2"
                           onClick={() => {
-                            handleEdit(sector.id);
+                            handleEdit(road.id);
                           }}
                         >
                           <Pencil size={32} />
@@ -294,9 +294,9 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
                         <button
                           className="text-red-500 shadow-md border p-2"
                           onClick={() => {
-                            setDeleteSectors({
-                              id: sector.id,
-                              nome: sector.nome,
+                            setDeleteRoad({
+                              id: road.id,
+                              nome: road.nome,
                             });
 
                             toggleIsOpenModal();
@@ -315,20 +315,20 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
           <Modal onClose={toggleIsOpenModal} isOpen={isOpenModal}>
             <div className="w-80 text-center">
               <h1 className="mb-4 font-semibold text-xl">
-                Tem certeza que dejesa deletar o {deleteSectors?.nome}
+                Tem certeza que dejesa deletar o {deleteRoads?.nome}
               </h1>
 
               <div className="flex justify-center gap-6 my-2">
                 <button
                   className="bg-white py-1 px-2 rounded text-green-600"
-                  onClick={() => deleteSector(deleteSectors.id)}
+                  onClick={() => deleteRoad(deleteRoads.id)}
                 >
                   <Check size={32} />
                 </button>
                 <button
                   className="bg-white py-1 px-2 rounded text-red-600"
                   onClick={() => {
-                    clearDeleteSector();
+                    clearDeleteRoad();
                     toggleIsOpenModal();
                   }}
                 >
@@ -364,15 +364,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  let sectors;
+  let road;
   try {
-    const requestSector = await getSector(ctx);
+    const requestRoad = await getRoad(ctx);
 
-    if (requestSector.status === 200) {
-      sectors = requestSector.data.retorno;
+    if (requestRoad.status === 200) {
+      road = requestRoad.data.retorno;
     }
   } catch (err) {
-    sectors = [];
+    road = [];
   }
 
   let isLogin = false;
@@ -382,7 +382,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       isLogin,
-      sectors,
+      road,
     },
   };
 };

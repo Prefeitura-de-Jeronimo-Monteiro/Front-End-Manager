@@ -1,20 +1,20 @@
 import { useState } from "react";
-import Head from "next/head";
+import { parseCookies } from "nookies";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 
 // Libs
 import { Check, Pencil, Plus, Trash, X } from "@phosphor-icons/react";
 import { Form, Formik } from "formik";
-import { parseCookies } from "nookies";
 
 // Services
-import { RegisterSector } from "@/shared/services/Sector/create.service";
-import { DeleteSectorRequest } from "@/shared/services/Sector/delete.service";
-import { getSector } from "@/shared/services/Sector/view.service";
-import { updateSectorRequest } from "@/shared/services/Sector/update.service";
+import { RegisterNeighborhood } from "@/shared/services/Neighborhood/create.service";
+import { DeleteNeighborhoodRequest } from "@/shared/services/Neighborhood/delete.service";
+import { getNeighborhood } from "@/shared/services/Neighborhood/view.service";
+import { updateNeighborhoodRequest } from "@/shared/services/Neighborhood/update.service";
 
 // Interfaces
-import { ISector } from "@/shared/interfaces/SectorData";
+import { INeighborhood } from "@/shared/interfaces/NeighborhoodData";
 
 // Components
 import { Empty } from "@/shared/components/Empty";
@@ -22,14 +22,21 @@ import { FormInput } from "@/shared/components/Input";
 import { Modal } from "@/shared/components/Modal";
 import { Result } from "@/shared/components/Result";
 
-export default function Sector({ sectors }: { sectors: ISector[] }) {
+export default function Neighborhood({
+  neighborhoods,
+}: {
+  neighborhoods: INeighborhood[];
+}) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [viewSectors, setViewSectors] = useState<ISector[]>(sectors);
-  const [deleteSectors, setDeleteSectors] = useState<ISector>({
-    id: "",
-    nome: "",
-  });
+  const [viewNeighborhoods, setViewNeighborhoods] =
+    useState<INeighborhood[]>(neighborhoods);
+  const [deleteNeighborhoods, setDeleteNeighborhoods] = useState<INeighborhood>(
+    {
+      id: "",
+      nome: "",
+    }
+  );
   const [result, setResult] = useState({ text: "", status: false });
   const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
 
@@ -49,25 +56,25 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
     setIsOpenResult(!isOpenResult);
   };
 
-  const getSectors = () => {
-    getSector()
+  const getNeighborhoods = () => {
+    getNeighborhood()
       .then((res) => {
-        setViewSectors(res.data.retorno);
+        setViewNeighborhoods(res.data.retorno);
       })
       .catch((err) => console.log(err));
   };
 
-  const handleCreateSector = ({ nome }: ISector) => {
+  const handleCreateNeighborhood = ({ nome }: INeighborhood) => {
     setIsOpenResult(false);
 
-    RegisterSector({ nome })
+    RegisterNeighborhood({ nome })
       .then((res) => {
         setResult({
           text: res.data.retorno,
           status: true,
         });
 
-        getSectors();
+        getNeighborhoods();
         toggleIsOpen();
       })
       .catch((err) => {
@@ -88,17 +95,17 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
       });
   };
 
-  const deleteSector = (id?: string) => {
+  const deleteNeighborhood = (id?: string) => {
     setIsOpenResult(false);
 
     if (id) {
-      DeleteSectorRequest(id)
+      DeleteNeighborhoodRequest(id)
         .then((res) => {
           setResult({ text: res.data.retorno, status: true });
 
-          getSectors();
+          getNeighborhoods();
           toggleIsOpenModal();
-          clearDeleteSector();
+          clearDeleteNeighborhood();
         })
         .catch((err) => {
           try {
@@ -117,7 +124,7 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
           toggleResult();
         });
     } else {
-      DeleteSectorRequest("")
+      DeleteNeighborhoodRequest("")
         .catch((err) => {
           try {
             setResult({
@@ -132,37 +139,37 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
           }
         })
         .finally(() => {
-          getSectors();
+          getNeighborhoods();
           toggleResult();
         });
     }
   };
 
-  const clearDeleteSector = () => {
-    setDeleteSectors({
+  const clearDeleteNeighborhood = () => {
+    setDeleteNeighborhoods({
       id: "",
       nome: "",
     });
   };
 
   const handleEdit = (id?: string) => {
-    const updatedSectors = viewSectors.map((sector) => {
-      if (sector.id === id) {
-        return { ...sector, isEdit: !sector.isEdit };
+    const updatedNeighborhoods = viewNeighborhoods.map((neighborhood) => {
+      if (neighborhood.id === id) {
+        return { ...neighborhood, isEdit: !neighborhood.isEdit };
       }
 
-      return sector;
+      return neighborhood;
     });
 
-    setViewSectors(updatedSectors);
+    setViewNeighborhoods(updatedNeighborhoods);
   };
 
-  const submitEdit = ({ nome, id }: ISector) => {
+  const submitEdit = ({ nome, id }: INeighborhood) => {
     console.log(id);
 
-    updateSectorRequest({ nome, id })
+    updateNeighborhoodRequest({ nome, id })
       .then((res) => {
-        getSectors();
+        getNeighborhoods();
         handleEdit(id);
 
         setResult({
@@ -184,19 +191,19 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
   return (
     <>
       <Head>
-        <title>Setores</title>
+        <title>Bairros</title>
       </Head>
 
       <Modal isOpen={isOpen} onClose={toggleIsOpen}>
         <Formik
           initialValues={{ nome: "" }}
-          onSubmit={({ nome }) => handleCreateSector({ nome })}
+          onSubmit={({ nome }) => handleCreateNeighborhood({ nome })}
         >
           {({ errors, touched }) => (
             <Form className="flex flex-col items-center gap-4 px-4">
-              <h1 className="font-bold text-2xl">Criar Setores</h1>
+              <h1 className="font-bold text-2xl">Criar Bairros</h1>
               <div>
-                <label htmlFor="nome">Nome do Setor</label>
+                <label htmlFor="nome">Nome do Bairro</label>
                 <FormInput
                   name="nome"
                   id="nome"
@@ -208,7 +215,7 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
                 type="submit"
                 className="py-2 px-4 bg-white text-black rounded font-semibold"
               >
-                Criar Setor
+                Criar Bairro
               </button>
             </Form>
           )}
@@ -224,7 +231,7 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
         </button>
       </div>
 
-      {viewSectors.length > 0 ? (
+      {viewNeighborhoods.length > 0 ? (
         <div className="my-4 mx-8 w-screen">
           <table className="w-full">
             <thead className="text-left">
@@ -233,13 +240,13 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
               </tr>
             </thead>
             <tbody className="text-left flex gap-3 flex-col">
-              {viewSectors.map((sector) => (
-                <tr key={sector.id}>
-                  {sector.isEdit ? (
+              {viewNeighborhoods.map((neighborhood) => (
+                <tr key={neighborhood.id}>
+                  {neighborhood.isEdit ? (
                     <th className="flex items-center gap-4">
                       <Formik
                         onSubmit={({ nome }) =>
-                          submitEdit({ nome, id: sector.id })
+                          submitEdit({ nome, id: neighborhood.id })
                         }
                         initialValues={{ nome: "" }}
                       >
@@ -265,7 +272,7 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
                                 className="text-red-500 shadow-md border p-2"
                                 type="button"
                                 onClick={() => {
-                                  handleEdit(sector.id);
+                                  handleEdit(neighborhood.id);
                                 }}
                               >
                                 <X size={32} />
@@ -278,14 +285,14 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
                   ) : (
                     <th className="flex items-center gap-4">
                       <button className="py-2 px-4 bg-gray-500 text-white w-60 font-semibold text-2xl">
-                        {sector.nome}
+                        {neighborhood.nome}
                       </button>
 
                       <div className="flex gap-2">
                         <button
                           className="text-blue-500 shadow-md border p-2"
                           onClick={() => {
-                            handleEdit(sector.id);
+                            handleEdit(neighborhood.id);
                           }}
                         >
                           <Pencil size={32} />
@@ -294,9 +301,9 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
                         <button
                           className="text-red-500 shadow-md border p-2"
                           onClick={() => {
-                            setDeleteSectors({
-                              id: sector.id,
-                              nome: sector.nome,
+                            setDeleteNeighborhoods({
+                              id: neighborhood.id,
+                              nome: neighborhood.nome,
                             });
 
                             toggleIsOpenModal();
@@ -315,20 +322,20 @@ export default function Sector({ sectors }: { sectors: ISector[] }) {
           <Modal onClose={toggleIsOpenModal} isOpen={isOpenModal}>
             <div className="w-80 text-center">
               <h1 className="mb-4 font-semibold text-xl">
-                Tem certeza que dejesa deletar o {deleteSectors?.nome}
+                Tem certeza que dejesa deletar o {deleteNeighborhoods?.nome}
               </h1>
 
               <div className="flex justify-center gap-6 my-2">
                 <button
                   className="bg-white py-1 px-2 rounded text-green-600"
-                  onClick={() => deleteSector(deleteSectors.id)}
+                  onClick={() => deleteNeighborhood(deleteNeighborhoods.id)}
                 >
                   <Check size={32} />
                 </button>
                 <button
                   className="bg-white py-1 px-2 rounded text-red-600"
                   onClick={() => {
-                    clearDeleteSector();
+                    clearDeleteNeighborhood();
                     toggleIsOpenModal();
                   }}
                 >
@@ -364,15 +371,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  let sectors;
+  let neighborhoods;
   try {
-    const requestSector = await getSector(ctx);
+    const requestNeighborhood = await getNeighborhood(ctx);
 
-    if (requestSector.status === 200) {
-      sectors = requestSector.data.retorno;
+    if (requestNeighborhood.status === 200) {
+      neighborhoods = requestNeighborhood.data.retorno;
     }
   } catch (err) {
-    sectors = [];
+    neighborhoods = [];
   }
 
   let isLogin = false;
@@ -382,7 +389,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       isLogin,
-      sectors,
+      neighborhoods,
     },
   };
 };
