@@ -1,30 +1,24 @@
-import { Error } from "@/shared/components/Error";
-import { FormInput } from "@/shared/components/Input";
-import { Modal } from "@/shared/components/Modal";
-import { IResgister } from "@/shared/interfaces/RegisterData";
-import { IRoles } from "@/shared/interfaces/RolesData";
+import {Error} from "@/shared/components/Error";
+import {FormInput} from "@/shared/components/Input";
+import {IResgister} from "@/shared/interfaces/RegisterData";
+import {IRoles} from "@/shared/interfaces/RolesData";
 import api from "@/shared/services";
-import { RegisterUser } from "@/shared/services/User/create.service";
-import {
-  Envelope,
-  Eye,
-  EyeClosed,
-  User as IconUser,
-} from "@phosphor-icons/react";
-import { Field, Form, Formik } from "formik";
-import { GetServerSideProps } from "next";
+import {RegisterUser} from "@/shared/services/User/create.service";
+import {Envelope, Eye, EyeClosed, User as IconUser,} from "@phosphor-icons/react";
+import {Field, Form, Formik} from "formik";
+import {GetServerSideProps} from "next";
 import Head from "next/head";
-import { parseCookies } from "nookies";
-import { useState } from "react";
+import {parseCookies} from "nookies";
+import {useState} from "react";
 import * as yup from "yup";
 
 interface CreateUserProps {
   cargos: IRoles[];
 }
 
-export default function User({ cargos }: CreateUserProps) {
+export default function User({cargos}: CreateUserProps) {
   const [viewPassword, setViewPassword] = useState<boolean>(false);
-  const [result, setResult] = useState({ text: "", status: false });
+  const [result, setResult] = useState({text: "", status: false});
   const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
   const [submiting, setSubmiting] = useState<boolean>(false);
 
@@ -51,12 +45,12 @@ export default function User({ cargos }: CreateUserProps) {
   };
 
   const handleCreate = ({
-    nome,
-    sobrenome,
-    senha,
-    email,
-    cargoId,
-  }: IResgister) => {
+                          nome,
+                          sobrenome,
+                          senha,
+                          email,
+                          cargoId,
+                        }: IResgister) => {
     setSubmiting(true);
 
     RegisterUser({
@@ -66,7 +60,8 @@ export default function User({ cargos }: CreateUserProps) {
       email,
       cargoId,
     })
-      .then((res) => {})
+      .then((res) => {
+      })
       .catch((err) => {
         try {
           setResult({
@@ -100,12 +95,12 @@ export default function User({ cargos }: CreateUserProps) {
           senha: "",
           cargoId: "",
         }}
-        onSubmit={({ sobrenome, senha, nome, email, cargoId }) =>
-          handleCreate({ sobrenome, senha, nome, email, cargoId })
+        onSubmit={({sobrenome, senha, nome, email, cargoId}) =>
+          handleCreate({sobrenome, senha, nome, email, cargoId})
         }
         validationSchema={CreateUserSchema}
       >
-        {({ errors, touched }) => (
+        {({errors, touched}) => (
           <Form className="flex flex-col mx-auto my-24 justify-center items-center max-w-4xl px-4">
             <div className="w-full my-3">
               <label className="cursor-pointer" htmlFor="email">
@@ -119,7 +114,7 @@ export default function User({ cargos }: CreateUserProps) {
                 type="email"
                 name="email"
                 error={errors.email && touched.email ? errors.email : null}
-                iconLeft={<Envelope size={24} />}
+                iconLeft={<Envelope size={24}/>}
               />
             </div>
 
@@ -131,7 +126,7 @@ export default function User({ cargos }: CreateUserProps) {
                 id="nome"
                 name="nome"
                 error={errors.nome && touched.nome ? errors.nome : null}
-                iconLeft={<IconUser size={24} />}
+                iconLeft={<IconUser size={24}/>}
               />
             </div>
 
@@ -147,7 +142,7 @@ export default function User({ cargos }: CreateUserProps) {
                     ? errors.sobrenome
                     : null
                 }
-                iconLeft={<IconUser size={24} />}
+                iconLeft={<IconUser size={24}/>}
               />
             </div>
 
@@ -182,7 +177,8 @@ export default function User({ cargos }: CreateUserProps) {
               <label className="cursor-pointer" htmlFor="cargo">
                 Cargo
               </label>
-              <div className="flex w-full items-center gap-3 py-3 px-3 rounded-md border-2 focus-within:ring-1 ring-secondary">
+              <div
+                className="flex w-full items-center gap-3 py-3 px-3 rounded-md border-2 focus-within:ring-1 ring-secondary">
                 <Field
                   as="select"
                   name="cargoId"
@@ -205,7 +201,7 @@ export default function User({ cargos }: CreateUserProps) {
               </div>
 
               {errors.cargoId && touched.cargoId ? (
-                <Error text={errors.cargoId} />
+                <Error text={errors.cargoId}/>
               ) : null}
             </div>
 
@@ -223,7 +219,7 @@ export default function User({ cargos }: CreateUserProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ["BearerToken"]: token } = parseCookies(ctx);
+  const {["BearerToken"]: token} = parseCookies(ctx);
 
   if (!token) {
     return {

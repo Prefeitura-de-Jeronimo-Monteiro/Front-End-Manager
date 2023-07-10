@@ -1,9 +1,9 @@
-import { GetServerSidePropsContext } from "next";
-import { parseCookies } from "nookies";
+import {GetServerSidePropsContext} from "next";
+import {parseCookies} from "nookies";
 import axios from "axios";
 
 const api = (ctx?: GetServerSidePropsContext) => {
-  const { BearerToken: token } = parseCookies(ctx);
+  const {BearerToken: token} = parseCookies(ctx);
 
   const requests = axios.create({
     baseURL: "https://pmjm.azurewebsites.net/",

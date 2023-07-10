@@ -1,4 +1,4 @@
-import { IRoad } from "@/shared/interfaces/RoadData";
+import {IRoad} from "@/shared/interfaces/RoadData";
 import api from "..";
 
 export const updateRoadRequest = (data: IRoad) =>

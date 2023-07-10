@@ -1,5 +1,5 @@
-import { Field } from "formik";
-import { Error } from "./Error";
+import {Field} from "formik";
+import {Error} from "./Error";
 
 interface FormInput {
   id?: string;
@@ -13,15 +13,15 @@ interface FormInput {
 }
 
 export const FormInput = ({
-  id,
-  type,
-  name,
-  placeholder,
-  iconLeft,
-  iconRight,
-  className,
-  error,
-}: FormInput) => {
+                            id,
+                            type,
+                            name,
+                            placeholder,
+                            iconLeft,
+                            iconRight,
+                            className,
+                            error,
+                          }: FormInput) => {
   return (
     <>
       <div className="flex w-full items-center gap-3 py-3 px-3 rounded-md border-2 focus-within:ring-1 ring-secondary">
@@ -35,7 +35,7 @@ export const FormInput = ({
         />
         {iconRight}
       </div>
-      {error ? <Error text={error} /> : null}
+      {error ? <Error text={error}/> : null}
     </>
   );
 };

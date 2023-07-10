@@ -1,6 +1,6 @@
-import { GetServerSideProps } from "next";
+import {GetServerSideProps} from "next";
 import Head from "next/head";
-import { parseCookies } from "nookies";
+import {parseCookies} from "nookies";
 
 export default function Report() {
   return (
@@ -15,7 +15,7 @@ export default function Report() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ["BearerToken"]: token } = parseCookies(ctx);
+  const {["BearerToken"]: token} = parseCookies(ctx);
 
   if (!token) {
     return {

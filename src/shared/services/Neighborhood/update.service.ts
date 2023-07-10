@@ -1,4 +1,4 @@
-import { INeighborhood } from "@/shared/interfaces/NeighborhoodData";
+import {INeighborhood} from "@/shared/interfaces/NeighborhoodData";
 import api from "..";
 
 export const updateNeighborhoodRequest = (data: INeighborhood) =>

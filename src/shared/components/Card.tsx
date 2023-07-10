@@ -4,7 +4,7 @@ interface CardProps {
   value: string;
 }
 
-export const Card = ({ title, icon, value }: CardProps) => {
+export const Card = ({title, icon, value}: CardProps) => {
   return (
     <div className="w-64 flex flex-col gap-4 shadow-md rounded-md p-4">
       <h6 className="text-lg">{title}</h6>

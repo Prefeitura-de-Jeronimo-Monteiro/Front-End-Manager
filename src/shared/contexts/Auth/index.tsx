@@ -1,10 +1,10 @@
 import api from "@/shared/services";
-import { AxiosResponse } from "axios";
-import React, { createContext, useEffect, useState } from "react";
-import { destroyCookie, parseCookies, setCookie } from "nookies";
+import {AxiosResponse} from "axios";
+import React, {createContext, useEffect, useState} from "react";
+import {destroyCookie, parseCookies, setCookie} from "nookies";
 import Router from "next/router";
-import { IUser } from "@/shared/interfaces/UserData";
-import { getUserDataById } from "@/shared/services/User/view.service";
+import {IUser} from "@/shared/interfaces/UserData";
+import {getUserDataById} from "@/shared/services/User/view.service";
 
 interface AuthContextData {
   user: IUser;
@@ -18,11 +18,11 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({children}: AuthProviderProps) => {
   const [user, setUser] = useState<IUser>({});
 
   useEffect(() => {
-    const { Id: id } = parseCookies();
+    const {Id: id} = parseCookies();
 
     if (id) {
       getUserDataById(id)
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = async ({ usuario, senha }: IAuthData) => {
+  const login = async ({usuario, senha}: IAuthData) => {
     const requestLogin = await api().post("autenticacao", {
       usuario,
       senha,
@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ login, logout, user }}>
+    <AuthContext.Provider value={{login, logout, user}}>
       {children}
     </AuthContext.Provider>
   );
