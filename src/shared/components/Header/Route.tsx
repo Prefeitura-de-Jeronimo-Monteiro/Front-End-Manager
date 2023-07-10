@@ -8,7 +8,7 @@ interface RouteData extends IRoutes {
   onClose?: () => void;
 }
 
-const Routes = ({ href, title, icon, onClick, onClose }: RouteData) => {
+const Routes = ({ href, title, icon, onClick, onClose, open }: RouteData) => {
   return (
     <>
       <li className="select-none">
@@ -29,7 +29,9 @@ const Routes = ({ href, title, icon, onClick, onClose }: RouteData) => {
               {icon} {title}
             </span>
             <span className="mr-4">
-              <CaretRight />
+              <CaretRight
+                className={`${open ? "rotate-90" : ""} transition-all`}
+              />
             </span>
           </span>
         )}
@@ -60,6 +62,7 @@ export const NestedRoutes = ({
               onClick={() => {
                 onToggleOpen(route.title);
               }}
+              open={route.open}
             />
           ) : (
             <Routes

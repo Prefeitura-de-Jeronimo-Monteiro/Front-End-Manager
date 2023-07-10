@@ -1,6 +1,8 @@
 import { FormInput } from "@/shared/components/Input";
 import { Form, Formik } from "formik";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { parseCookies } from "nookies";
 
 export default function Update() {
   return (
@@ -21,3 +23,26 @@ export default function Update() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ["BearerToken"]: token } = parseCookies(ctx);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/user/login",
+        permanent: false,
+      },
+    };
+  }
+
+  let isLogin = false;
+
+  token ? (isLogin = true) : isLogin;
+
+  return {
+    props: {
+      isLogin,
+    },
+  };
+};

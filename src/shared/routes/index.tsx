@@ -1,4 +1,4 @@
-import { Buildings, Gauge, User } from "@phosphor-icons/react";
+import { Buildings, ChartPieSlice, Gauge, User } from "@phosphor-icons/react";
 import { IRoutes } from "../interfaces/RoutesData";
 
 export const RoutesProps: IRoutes[] = [
@@ -10,4 +10,5 @@ export const RoutesProps: IRoutes[] = [
     open: false,
   },
   { title: "Funcionários", href: "user", icon: <User size={32} /> },
+  { title: "Relatórios", href: "report", icon: <ChartPieSlice size={32} /> },
 ];

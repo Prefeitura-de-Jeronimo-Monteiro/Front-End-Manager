@@ -371,7 +371,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     if (requestSector.status === 200) {
       sectors = requestSector.data.retorno;
     }
-  } catch (error) {
+  } catch (err) {
     sectors = [];
   }
 
