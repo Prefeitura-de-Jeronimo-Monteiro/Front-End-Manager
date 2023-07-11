@@ -1,16 +1,17 @@
-import {Card} from "@/shared/components/Card";
-import {getChamados} from "@/shared/services/Called/view.service";
-import {User} from "@phosphor-icons/react";
-import {GetServerSideProps} from "next";
+import { Card } from "@/shared/components/Card";
+import { BlackLoading, WhiteLoading } from "@/shared/components/Loading";
+import { getChamados } from "@/shared/services/Called/view.service";
+import { User } from "@phosphor-icons/react";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
-import {parseCookies} from "nookies";
-import {useEffect, useState} from "react";
+import { parseCookies } from "nookies";
+import { useEffect, useState } from "react";
 
 interface DashboardProps {
   calleds: [];
 }
 
-export default function Dashboard({calleds}: DashboardProps) {
+export default function Dashboard({ calleds }: DashboardProps) {
   const [viewCalleds, setViewCalleds] = useState(calleds);
 
   const cardInfos = [
@@ -18,42 +19,42 @@ export default function Dashboard({calleds}: DashboardProps) {
       id: "1",
       title: "Teste",
       description: "Teste",
-      icon: <User size={24}/>,
+      icon: <User size={24} />,
       value: "12",
     },
     {
       id: "2",
       title: "Teste",
       description: "Teste",
-      icon: <User size={24}/>,
+      icon: <User size={24} />,
       value: "12",
     },
     {
       id: "3",
       title: "Teste",
       description: "Teste",
-      icon: <User size={24}/>,
+      icon: <User size={24} />,
       value: "12",
     },
     {
       id: "4",
       title: "Teste",
       description: "Teste",
-      icon: <User size={24}/>,
+      icon: <User size={24} />,
       value: "12",
     },
     {
       id: "5",
       title: "Teste",
       description: "Teste",
-      icon: <User size={24}/>,
+      icon: <User size={24} />,
       value: "12",
     },
     {
       id: "6",
       title: "Teste",
       description: "Teste",
-      icon: <User size={24}/>,
+      icon: <User size={24} />,
       value: "12",
     },
   ];
@@ -71,7 +72,6 @@ export default function Dashboard({calleds}: DashboardProps) {
       <Head>
         <title>Dashboard | Atendimentos</title>
       </Head>
-
       <div className="flex gap-2 flex-wrap mx-4 my-2 justify-center">
         {cardInfos.map((cardInfo) => (
           <Card
@@ -86,18 +86,18 @@ export default function Dashboard({calleds}: DashboardProps) {
       <div className="my-4 mx-8 w-screen">
         <table className="w-full">
           <thead className="text-left">
-          <tr>
-            <th>Descrição</th>
-            <th>Valor</th>
-            <th>Ações</th>
-          </tr>
+            <tr>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Ações</th>
+            </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>Teste</td>
-            <td>12</td>
-            <td></td>
-          </tr>
+            <tr>
+              <td>Teste</td>
+              <td>12</td>
+              <td></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -106,7 +106,7 @@ export default function Dashboard({calleds}: DashboardProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const {["BearerToken"]: token} = parseCookies(ctx);
+  const { ["BearerToken"]: token } = parseCookies(ctx);
 
   if (!token) {
     return {

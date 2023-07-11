@@ -1,20 +1,21 @@
-import {useContext, useState} from "react";
-import {Form, Formik} from "formik";
-import {GetServerSideProps} from "next";
-import {parseCookies} from "nookies";
+import { useContext, useState } from "react";
+import { Form, Formik } from "formik";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
 import Router from "next/router";
-import {Envelope, Eye, EyeClosed, Lock} from "@phosphor-icons/react";
+import { Envelope, Eye, EyeClosed, Lock } from "@phosphor-icons/react";
 import * as yup from "yup";
 
-import {AuthContext} from "@/shared/contexts/Auth";
-import {FormInput} from "@/shared/components/Input";
+import { AuthContext } from "@/shared/contexts/Auth";
+import { FormInput } from "@/shared/components/Input";
 import Head from "next/head";
-import {Result} from "@/shared/components/Result";
+import { Result } from "@/shared/components/Result";
+import { WhiteLoading } from "@/shared/components/Loading";
 
 export default function Login() {
-  const {login} = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [viewPassword, setViewPassword] = useState<boolean>(false);
-  const [result, setResult] = useState({text: "", status: false});
+  const [result, setResult] = useState({ text: "", status: false });
   const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
   const [submiting, setSubmiting] = useState<boolean>(false);
 
@@ -34,10 +35,10 @@ export default function Login() {
     senha: yup.string().required("Senha é um campo obrigatório"),
   });
 
-  const handleLogin = ({usuario, senha}: IAuthData) => {
+  const handleLogin = ({ usuario, senha }: IAuthData) => {
     setSubmiting(true);
 
-    login({usuario, senha})
+    login({ usuario, senha })
       .then(async () => {
         await Router.push("/");
       })
@@ -69,18 +70,18 @@ export default function Login() {
       <div className="flex flex-col w-screen h-screen items-center justify-center overflow-auto select-none">
         <div className="flex flex-col items-center mb-4 gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/img/logo.png" alt="" className="w-52"/>
+          <img src="/img/logo.png" alt="" className="w-52" />
           <h1 className="text-lg text-center font-semibold max-w-xs">
             Seja Bem-Vindo(a) ao Sistema da Prefeitura de Jeronimo Monteiro
           </h1>
         </div>
 
         <Formik
-          initialValues={{usuario: "", senha: ""}}
+          initialValues={{ usuario: "", senha: "" }}
           validationSchema={LoginSchema}
-          onSubmit={({usuario, senha}) => handleLogin({usuario, senha})}
+          onSubmit={({ usuario, senha }) => handleLogin({ usuario, senha })}
         >
-          {({errors, touched}) => (
+          {({ errors, touched }) => (
             <Form className="flex flex-col items-center w-96 justify-center">
               <div className="flex flex-col w-full gap-8">
                 <div className="w-full">
@@ -96,7 +97,7 @@ export default function Login() {
                     error={
                       errors.usuario && touched.usuario ? errors.usuario : null
                     }
-                    iconLeft={<Envelope size={24}/>}
+                    iconLeft={<Envelope size={24} />}
                     className="text-lg"
                   />
                 </div>
@@ -112,7 +113,7 @@ export default function Login() {
                     name="senha"
                     placeholder="********"
                     error={errors.senha && touched.senha ? errors.senha : null}
-                    iconLeft={<Lock size={24}/>}
+                    iconLeft={<Lock size={24} />}
                     iconRight={
                       viewPassword ? (
                         <Eye
@@ -135,10 +136,10 @@ export default function Login() {
 
               <button
                 type="submit"
-                className={`bg-background-600 py-2 px-4 rounded-full text-white w-72 mt-8 disabled:opacity-70`}
+                className={`bg-background-600 py-2 px-4 rounded-full text-white w-72 mt-8 disabled:opacity-70 flex justify-center`}
                 disabled={submiting}
               >
-                Entrar
+                {submiting ? <WhiteLoading text="Carregando..." /> : "Entrar"}
               </button>
             </Form>
           )}
@@ -156,7 +157,7 @@ export default function Login() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const {["BearerToken"]: token} = parseCookies(ctx);
+  const { ["BearerToken"]: token } = parseCookies(ctx);
 
   if (token) {
     return {
