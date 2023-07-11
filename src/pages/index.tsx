@@ -17,55 +17,30 @@ export default function Dashboard({ calleds }: DashboardProps) {
   const cardInfos = [
     {
       id: "1",
-      title: "Teste",
-      description: "Teste",
+      title: "Em Andamento",
+      description: "Chamados que estão com prazo não excedido",
       icon: <User size={24} />,
       value: "12",
     },
     {
       id: "2",
-      title: "Teste",
-      description: "Teste",
+      title: "Atrasados",
+      description: "Chamados que estão com prazo exedido",
       icon: <User size={24} />,
       value: "12",
     },
     {
       id: "3",
-      title: "Teste",
-      description: "Teste",
-      icon: <User size={24} />,
-      value: "12",
-    },
-    {
-      id: "4",
-      title: "Teste",
-      description: "Teste",
-      icon: <User size={24} />,
-      value: "12",
-    },
-    {
-      id: "5",
-      title: "Teste",
-      description: "Teste",
-      icon: <User size={24} />,
-      value: "12",
-    },
-    {
-      id: "6",
-      title: "Teste",
-      description: "Teste",
+      title: "Concluidos",
+      description: "Chamados finalizados",
       icon: <User size={24} />,
       value: "12",
     },
   ];
 
   const requestCalled = () => {
-    getChamados().then((res) => console.log(res));
+    getChamados().then((res) => setViewCalleds(res.data.retorno));
   };
-
-  useEffect(() => {
-    requestCalled();
-  }, []);
 
   return (
     <>
@@ -79,6 +54,10 @@ export default function Dashboard({ calleds }: DashboardProps) {
             title={cardInfo.title}
             icon={cardInfo.icon}
             value={cardInfo.value}
+            description={cardInfo.description}
+            onClick={() => {
+              console.log("Teste");
+            }}
           />
         ))}
       </div>
