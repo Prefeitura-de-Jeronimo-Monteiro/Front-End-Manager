@@ -8,6 +8,14 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js"
+    },
+    "./*": {
+      "import": "./dist/icons/*.es.js"
+    }
+  },
   "dependencies": {
     "@phosphor-icons/react": "^2.0.10",
     "axios": "^1.4.0",
