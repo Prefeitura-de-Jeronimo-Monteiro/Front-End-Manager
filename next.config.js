@@ -1,4 +1,4 @@
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -6,11 +6,11 @@ dotenv.config();
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    TOKEN_API_IMG: process.env.TOKEN_API_IMG,
+    API: process.env.URL,
   },
   modularizeImports: {
-    "@phosphor-icons/react": {
-      transform: "@phosphor-icons/react/{{member}}",
+    '@phosphor-icons/react': {
+      transform: '@phosphor-icons/react/{{member}}',
     },
   },
 };

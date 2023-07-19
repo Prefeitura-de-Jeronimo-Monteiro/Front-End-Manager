@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from 'react';
 
 interface DrawerProps {
   isOpen: boolean;
@@ -6,14 +6,14 @@ interface DrawerProps {
   children: React.ReactNode;
 }
 
-export const Drawer = ({isOpen, onClose, children}: DrawerProps) => {
-  const [animationClass, setAnimationClass] = useState("");
+export const Drawer = ({ isOpen, onClose, children }: DrawerProps) => {
+  const [animationClass, setAnimationClass] = useState('');
 
   useEffect(() => {
     if (isOpen) {
-      setAnimationClass("translate-x-0");
+      setAnimationClass('translate-x-0');
     } else {
-      setAnimationClass("-translate-x-full");
+      setAnimationClass('-translate-x-full');
     }
   }, [isOpen]);
 

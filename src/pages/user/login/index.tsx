@@ -1,21 +1,21 @@
-import { useContext, useState } from "react";
-import { Form, Formik } from "formik";
-import { GetServerSideProps } from "next";
-import { parseCookies } from "nookies";
-import Router from "next/router";
-import { Envelope, Eye, EyeClosed, Lock } from "@phosphor-icons/react";
-import * as yup from "yup";
+import { useContext, useState } from 'react';
+import { Form, Formik } from 'formik';
+import { GetServerSideProps } from 'next';
+import { parseCookies } from 'nookies';
+import Router from 'next/router';
+import { Envelope, Eye, EyeClosed, Lock } from '@phosphor-icons/react';
+import * as yup from 'yup';
 
-import { AuthContext } from "@/shared/contexts/Auth";
-import { FormInput } from "@/shared/components/Input";
-import Head from "next/head";
-import { Result } from "@/shared/components/Result";
-import { WhiteLoading } from "@/shared/components/Loading";
+import { AuthContext } from '@/shared/contexts/Auth';
+import { FormInput } from '@/shared/components/Input';
+import Head from 'next/head';
+import { Result } from '@/shared/components/Result';
+import { WhiteLoading } from '@/shared/components/Loading';
 
 export default function Login() {
   const { login } = useContext(AuthContext);
   const [viewPassword, setViewPassword] = useState<boolean>(false);
-  const [result, setResult] = useState({ text: "", status: false });
+  const [result, setResult] = useState({ text: '', status: false });
   const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
   const [submiting, setSubmiting] = useState<boolean>(false);
 
@@ -30,9 +30,9 @@ export default function Login() {
   const LoginSchema = yup.object().shape({
     usuario: yup
       .string()
-      .email("E-Mail não é válido")
-      .required("Nome é um campo obrigatório"),
-    senha: yup.string().required("Senha é um campo obrigatório"),
+      .email('E-Mail não é válido')
+      .required('Nome é um campo obrigatório'),
+    senha: yup.string().required('Senha é um campo obrigatório'),
   });
 
   const handleLogin = ({ usuario, senha }: IAuthData) => {
@@ -40,7 +40,7 @@ export default function Login() {
 
     login({ usuario, senha })
       .then(async () => {
-        await Router.push("/");
+        await Router.push('/');
       })
       .catch((err) => {
         try {
@@ -50,7 +50,7 @@ export default function Login() {
           });
         } catch (error) {
           setResult({
-            text: "Algo deu errado, tente novamente mais tarde!",
+            text: 'Algo deu errado, tente novamente mais tarde!',
             status: false,
           });
         }
@@ -77,7 +77,7 @@ export default function Login() {
         </div>
 
         <Formik
-          initialValues={{ usuario: "", senha: "" }}
+          initialValues={{ usuario: '', senha: '' }}
           validationSchema={LoginSchema}
           onSubmit={({ usuario, senha }) => handleLogin({ usuario, senha })}
         >
@@ -109,7 +109,7 @@ export default function Login() {
 
                   <FormInput
                     id="senha"
-                    type={viewPassword ? "text" : "password"}
+                    type={viewPassword ? 'text' : 'password'}
                     name="senha"
                     placeholder="********"
                     error={errors.senha && touched.senha ? errors.senha : null}
@@ -139,7 +139,7 @@ export default function Login() {
                 className={`bg-background-600 py-2 px-4 rounded-full text-white w-72 mt-8 disabled:opacity-70 flex justify-center`}
                 disabled={submiting}
               >
-                {submiting ? <WhiteLoading text="Carregando..." /> : "Entrar"}
+                {submiting ? <WhiteLoading text="Carregando..." /> : 'Entrar'}
               </button>
             </Form>
           )}
@@ -157,12 +157,12 @@ export default function Login() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ["BearerToken"]: token } = parseCookies(ctx);
+  const { ['BearerToken']: token } = parseCookies(ctx);
 
   if (token) {
     return {
       redirect: {
-        destination: "/",
+        destination: '/',
         permanent: false,
       },
     };

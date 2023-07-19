@@ -1,21 +1,21 @@
-import Link from "next/link";
-import {useContext, useState} from "react";
-import {AuthContext} from "../../contexts/Auth";
-import Image from "next/image";
-import {List} from "@phosphor-icons/react";
-import {Drawer} from "../Drawer";
-import {IRoutes} from "../../interfaces/RoutesData";
-import {RoutesProps} from "../../routes";
-import {NestedRoutes} from "./Route";
+import Link from 'next/link';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../../contexts/Auth';
+import Image from 'next/image';
+import { List } from '@phosphor-icons/react';
+import { Drawer } from '../Drawer';
+import { IRoutes } from '../../interfaces/RoutesData';
+import { RoutesProps } from '../../routes';
+import { NestedRoutes } from './Route';
 
 interface HeaderProps {
   isLogin: boolean;
 }
 
-export const Header = ({isLogin}: HeaderProps) => {
+export const Header = ({ isLogin }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  const {logout, user} = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
   const [routes, setRoutes] = useState<IRoutes[]>(RoutesProps);
 
   const toggleDropdown = () => {
@@ -29,7 +29,7 @@ export const Header = ({isLogin}: HeaderProps) => {
   const handleToggleOpen = (title: string) => {
     const updatedRoutes = routes.map((route) => {
       if (route.title === title && route.children) {
-        return {...route, open: !route.open};
+        return { ...route, open: !route.open };
       }
       return route;
     });
@@ -51,7 +51,7 @@ export const Header = ({isLogin}: HeaderProps) => {
             </Drawer>
 
             <div onClick={toggleDrawer} className="text-white cursor-pointer">
-              <List size={32}/>
+              <List size={32} />
             </div>
 
             <div
@@ -60,13 +60,12 @@ export const Header = ({isLogin}: HeaderProps) => {
             >
               <span className="text-white">{user.name}</span>
               <div className="rounded-full bg-white p-2 select-none">
-                <Image src="/img/user.png" alt="Teste" width={32} height={32}/>
+                <Image src="/img/user.png" alt="Teste" width={32} height={32} />
               </div>
 
               {isOpen && (
                 <>
-                  <div
-                    className="absolute border top-full text-center right-0 mt-3 w-28 bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
+                  <div className="absolute border top-full text-center right-0 mt-3 w-28 bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
                     <Link
                       href="/user/update"
                       className="block px-4 py-2 hover:bg-gray-100 rounded-ss-lg rounded-se-lg"

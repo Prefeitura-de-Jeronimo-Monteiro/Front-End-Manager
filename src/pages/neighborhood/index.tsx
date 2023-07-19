@@ -1,30 +1,30 @@
-import {useState} from "react";
-import {parseCookies} from "nookies";
-import {GetServerSideProps} from "next";
-import Head from "next/head";
+import { useState } from 'react';
+import { parseCookies } from 'nookies';
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 
 // Libs
-import {Check, Pencil, Plus, Trash, X} from "@phosphor-icons/react";
-import {Form, Formik} from "formik";
+import { Check, Pencil, Plus, Trash, X } from '@phosphor-icons/react';
+import { Form, Formik } from 'formik';
 
 // Services
-import {RegisterNeighborhood} from "@/shared/services/Neighborhood/create.service";
-import {DeleteNeighborhoodRequest} from "@/shared/services/Neighborhood/delete.service";
-import {getNeighborhood} from "@/shared/services/Neighborhood/view.service";
-import {updateNeighborhoodRequest} from "@/shared/services/Neighborhood/update.service";
+import { RegisterNeighborhood } from '@/shared/services/Neighborhood/create.service';
+import { DeleteNeighborhoodRequest } from '@/shared/services/Neighborhood/delete.service';
+import { getNeighborhood } from '@/shared/services/Neighborhood/view.service';
+import { updateNeighborhoodRequest } from '@/shared/services/Neighborhood/update.service';
 
 // Interfaces
-import {INeighborhood} from "@/shared/interfaces/NeighborhoodData";
+import { INeighborhood } from '@/shared/interfaces/NeighborhoodData';
 
 // Components
-import {Empty} from "@/shared/components/Empty";
-import {FormInput} from "@/shared/components/Input";
-import {Modal} from "@/shared/components/Modal";
-import {Result} from "@/shared/components/Result";
+import { Empty } from '@/shared/components/Empty';
+import { FormInput } from '@/shared/components/Input';
+import { Modal } from '@/shared/components/Modal';
+import { Result } from '@/shared/components/Result';
 
 export default function Neighborhood({
-                                       neighborhoods,
-                                     }: {
+  neighborhoods,
+}: {
   neighborhoods: INeighborhood[];
 }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -33,11 +33,11 @@ export default function Neighborhood({
     useState<INeighborhood[]>(neighborhoods);
   const [deleteNeighborhoods, setDeleteNeighborhoods] = useState<INeighborhood>(
     {
-      id: "",
-      nome: "",
-    }
+      id: '',
+      nome: '',
+    },
   );
-  const [result, setResult] = useState({text: "", status: false});
+  const [result, setResult] = useState({ text: '', status: false });
   const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
 
   const toggleIsOpen = () => {
@@ -64,10 +64,10 @@ export default function Neighborhood({
       .catch((err) => console.log(err));
   };
 
-  const handleCreateNeighborhood = ({nome}: INeighborhood) => {
+  const handleCreateNeighborhood = ({ nome }: INeighborhood) => {
     setIsOpenResult(false);
 
-    RegisterNeighborhood({nome})
+    RegisterNeighborhood({ nome })
       .then((res) => {
         setResult({
           text: res.data.retorno,
@@ -85,7 +85,7 @@ export default function Neighborhood({
           });
         } catch (error) {
           setResult({
-            text: "Algo deu errado, tente novamente mais tarde!",
+            text: 'Algo deu errado, tente novamente mais tarde!',
             status: false,
           });
         }
@@ -101,7 +101,7 @@ export default function Neighborhood({
     if (id) {
       DeleteNeighborhoodRequest(id)
         .then((res) => {
-          setResult({text: res.data.retorno, status: true});
+          setResult({ text: res.data.retorno, status: true });
 
           getNeighborhoods();
           toggleIsOpenModal();
@@ -115,7 +115,7 @@ export default function Neighborhood({
             });
           } catch (error) {
             setResult({
-              text: "Algo deu errado, tente novamente mais tarde!",
+              text: 'Algo deu errado, tente novamente mais tarde!',
               status: false,
             });
           }
@@ -124,7 +124,7 @@ export default function Neighborhood({
           toggleResult();
         });
     } else {
-      DeleteNeighborhoodRequest("")
+      DeleteNeighborhoodRequest('')
         .catch((err) => {
           try {
             setResult({
@@ -133,7 +133,7 @@ export default function Neighborhood({
             });
           } catch (error) {
             setResult({
-              text: "Algo deu errado, tente novamente mais tarde!",
+              text: 'Algo deu errado, tente novamente mais tarde!',
               status: false,
             });
           }
@@ -147,15 +147,15 @@ export default function Neighborhood({
 
   const clearDeleteNeighborhood = () => {
     setDeleteNeighborhoods({
-      id: "",
-      nome: "",
+      id: '',
+      nome: '',
     });
   };
 
   const handleEdit = (id?: string) => {
     const updatedNeighborhoods = viewNeighborhoods.map((neighborhood) => {
       if (neighborhood.id === id) {
-        return {...neighborhood, isEdit: !neighborhood.isEdit};
+        return { ...neighborhood, isEdit: !neighborhood.isEdit };
       }
 
       return neighborhood;
@@ -164,10 +164,8 @@ export default function Neighborhood({
     setViewNeighborhoods(updatedNeighborhoods);
   };
 
-  const submitEdit = ({nome, id}: INeighborhood) => {
-    console.log(id);
-
-    updateNeighborhoodRequest({nome, id})
+  const submitEdit = ({ nome, id }: INeighborhood) => {
+    updateNeighborhoodRequest({ nome, id })
       .then((res) => {
         getNeighborhoods();
         handleEdit(id);
@@ -179,7 +177,7 @@ export default function Neighborhood({
       })
       .catch((err) => {
         setResult({
-          text: "Algo deu errado, tente novamente mais tarde!",
+          text: 'Algo deu errado, tente novamente mais tarde!',
           status: false,
         });
       })
@@ -196,10 +194,10 @@ export default function Neighborhood({
 
       <Modal isOpen={isOpen} onClose={toggleIsOpen}>
         <Formik
-          initialValues={{nome: ""}}
-          onSubmit={({nome}) => handleCreateNeighborhood({nome})}
+          initialValues={{ nome: '' }}
+          onSubmit={({ nome }) => handleCreateNeighborhood({ nome })}
         >
-          {({errors, touched}) => (
+          {({ errors, touched }) => (
             <Form className="flex flex-col items-center gap-4 px-4">
               <h1 className="font-bold text-2xl">Criar Bairros</h1>
               <div>
@@ -227,7 +225,7 @@ export default function Neighborhood({
           className="bg-green-400 rounded-md flex items-center gap-1 py-2 px-4 select-none"
           onClick={toggleIsOpen}
         >
-          <Plus size={18} weight="bold"/> Criar
+          <Plus size={18} weight="bold" /> Criar
         </button>
       </div>
 
@@ -235,87 +233,87 @@ export default function Neighborhood({
         <div className="my-4 mx-8 w-screen">
           <table className="w-full">
             <thead className="text-left">
-            <tr>
-              <th className="text-xl mb-2 ">Nome</th>
-            </tr>
+              <tr>
+                <th className="text-xl mb-2 ">Nome</th>
+              </tr>
             </thead>
             <tbody className="text-left flex gap-3 flex-col">
-            {viewNeighborhoods.map((neighborhood) => (
-              <tr key={neighborhood.id}>
-                {neighborhood.isEdit ? (
-                  <th className="flex items-center gap-4">
-                    <Formik
-                      onSubmit={({nome}) =>
-                        submitEdit({nome, id: neighborhood.id})
-                      }
-                      initialValues={{nome: ""}}
-                    >
-                      {({errors, touched}) => (
-                        <Form className="flex items-center gap-4">
-                          <FormInput
-                            name="nome"
-                            id="nome"
-                            error={
-                              errors.nome && touched.nome ? errors.nome : null
-                            }
-                            className="w-60"
-                          />
-                          <div className="flex gap-2">
-                            <button
-                              className="text-green-500 shadow-md border p-2"
-                              type="submit"
-                            >
-                              <Check size={32}/>
-                            </button>
-
-                            <button
-                              className="text-red-500 shadow-md border p-2"
-                              type="button"
-                              onClick={() => {
-                                handleEdit(neighborhood.id);
-                              }}
-                            >
-                              <X size={32}/>
-                            </button>
-                          </div>
-                        </Form>
-                      )}
-                    </Formik>
-                  </th>
-                ) : (
-                  <th className="flex items-center gap-4">
-                    <button className="py-2 px-4 bg-gray-500 text-white w-60 font-semibold text-2xl">
-                      {neighborhood.nome}
-                    </button>
-
-                    <div className="flex gap-2">
-                      <button
-                        className="text-blue-500 shadow-md border p-2"
-                        onClick={() => {
-                          handleEdit(neighborhood.id);
-                        }}
+              {viewNeighborhoods.map((neighborhood) => (
+                <tr key={neighborhood.id}>
+                  {neighborhood.isEdit ? (
+                    <th className="flex items-center gap-4">
+                      <Formik
+                        onSubmit={({ nome }) =>
+                          submitEdit({ nome, id: neighborhood.id })
+                        }
+                        initialValues={{ nome: '' }}
                       >
-                        <Pencil size={32}/>
+                        {({ errors, touched }) => (
+                          <Form className="flex items-center gap-4">
+                            <FormInput
+                              name="nome"
+                              id="nome"
+                              error={
+                                errors.nome && touched.nome ? errors.nome : null
+                              }
+                              className="w-60"
+                            />
+                            <div className="flex gap-2">
+                              <button
+                                className="text-green-500 shadow-md border p-2"
+                                type="submit"
+                              >
+                                <Check size={32} />
+                              </button>
+
+                              <button
+                                className="text-red-500 shadow-md border p-2"
+                                type="button"
+                                onClick={() => {
+                                  handleEdit(neighborhood.id);
+                                }}
+                              >
+                                <X size={32} />
+                              </button>
+                            </div>
+                          </Form>
+                        )}
+                      </Formik>
+                    </th>
+                  ) : (
+                    <th className="flex items-center gap-4">
+                      <button className="py-2 px-4 bg-gray-500 text-white w-60 font-semibold text-2xl">
+                        {neighborhood.nome}
                       </button>
 
-                      <button
-                        className="text-red-500 shadow-md border p-2"
-                        onClick={() => {
-                          setDeleteNeighborhoods({
-                            id: neighborhood.id,
-                            nome: neighborhood.nome,
-                          });
+                      <div className="flex gap-2">
+                        <button
+                          className="text-blue-500 shadow-md border p-2"
+                          onClick={() => {
+                            handleEdit(neighborhood.id);
+                          }}
+                        >
+                          <Pencil size={32} />
+                        </button>
 
-                          toggleIsOpenModal();
-                        }}
-                      >
-                        <Trash size={32}/>
-                      </button>
-                    </div>
-                  </th>
-                )}
-              </tr>
-            ))}
+                        <button
+                          className="text-red-500 shadow-md border p-2"
+                          onClick={() => {
+                            setDeleteNeighborhoods({
+                              id: neighborhood.id,
+                              nome: neighborhood.nome,
+                            });
+
+                            toggleIsOpenModal();
+                          }}
+                        >
+                          <Trash size={32} />
+                        </button>
+                      </div>
+                    </th>
+                  )}
+                </tr>
+              ))}
             </tbody>
           </table>
 
@@ -330,7 +328,7 @@ export default function Neighborhood({
                   className="bg-white py-1 px-2 rounded text-green-600"
                   onClick={() => deleteNeighborhood(deleteNeighborhoods.id)}
                 >
-                  <Check size={32}/>
+                  <Check size={32} />
                 </button>
                 <button
                   className="bg-white py-1 px-2 rounded text-red-600"
@@ -339,14 +337,14 @@ export default function Neighborhood({
                     toggleIsOpenModal();
                   }}
                 >
-                  <X size={32}/>
+                  <X size={32} />
                 </button>
               </div>
             </div>
           </Modal>
         </div>
       ) : (
-        <Empty/>
+        <Empty />
       )}
 
       <Result
@@ -360,12 +358,12 @@ export default function Neighborhood({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const {["BearerToken"]: token} = parseCookies(ctx);
+  const { ['BearerToken']: token } = parseCookies(ctx);
 
   if (!token) {
     return {
       redirect: {
-        destination: "/user/login",
+        destination: '/user/login',
         permanent: false,
       },
     };

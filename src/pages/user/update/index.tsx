@@ -1,8 +1,8 @@
-import {FormInput} from "@/shared/components/Input";
-import {Form, Formik} from "formik";
-import {GetServerSideProps} from "next";
-import Head from "next/head";
-import {parseCookies} from "nookies";
+import { FormInput } from '@/shared/components/Input';
+import { Form, Formik } from 'formik';
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { parseCookies } from 'nookies';
 
 export default function Update() {
   return (
@@ -10,13 +10,14 @@ export default function Update() {
       <Head>
         <title>Alterar Usuário</title>
       </Head>
+
       <Formik
-        initialValues={{email: ""}}
+        initialValues={{ email: '' }}
         onSubmit={(values) => console.log(values)}
       >
-        {({errors}) => (
+        {({ errors }) => (
           <Form>
-            <FormInput name="email" error={errors.email || null}/>
+            <FormInput name="email" error={errors.email || null} />
           </Form>
         )}
       </Formik>
@@ -25,12 +26,12 @@ export default function Update() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const {["BearerToken"]: token} = parseCookies(ctx);
+  const { ['BearerToken']: token } = parseCookies(ctx);
 
   if (!token) {
     return {
       redirect: {
-        destination: "/user/login",
+        destination: '/user/login',
         permanent: false,
       },
     };

@@ -1,5 +1,5 @@
-import {INeighborhood} from "@/shared/interfaces/NeighborhoodData";
-import api from "..";
+import { INeighborhood } from '@/shared/interfaces/NeighborhoodData';
+import api from '..';
 
 export const RegisterNeighborhood = (data: INeighborhood) =>
-  api().post("bairro/criar", data);
+  api().post('bairro/criar', data);

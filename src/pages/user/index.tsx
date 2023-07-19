@@ -1,39 +1,44 @@
-import {Error} from "@/shared/components/Error";
-import {FormInput} from "@/shared/components/Input";
-import {IResgister} from "@/shared/interfaces/RegisterData";
-import {IRoles} from "@/shared/interfaces/RolesData";
-import api from "@/shared/services";
-import {RegisterUser} from "@/shared/services/User/create.service";
-import {Envelope, Eye, EyeClosed, User as IconUser,} from "@phosphor-icons/react";
-import {Field, Form, Formik} from "formik";
-import {GetServerSideProps} from "next";
-import Head from "next/head";
-import {parseCookies} from "nookies";
-import {useState} from "react";
-import * as yup from "yup";
+import { Error } from '@/shared/components/Error';
+import { FormInput } from '@/shared/components/Input';
+import { IResgister } from '@/shared/interfaces/RegisterData';
+import { IRoles } from '@/shared/interfaces/RolesData';
+import api from '@/shared/services';
+import { RegisterUser } from '@/shared/services/User/create.service';
+import {
+  Envelope,
+  Eye,
+  EyeClosed,
+  User as IconUser,
+} from '@phosphor-icons/react';
+import { Field, Form, Formik } from 'formik';
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { parseCookies } from 'nookies';
+import { useState } from 'react';
+import * as yup from 'yup';
 
 interface CreateUserProps {
   cargos: IRoles[];
 }
 
-export default function User({cargos}: CreateUserProps) {
+export default function User({ cargos }: CreateUserProps) {
   const [viewPassword, setViewPassword] = useState<boolean>(false);
-  const [result, setResult] = useState({text: "", status: false});
+  const [result, setResult] = useState({ text: '', status: false });
   const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
   const [submiting, setSubmiting] = useState<boolean>(false);
 
   const CreateUserSchema = yup.object().shape({
     email: yup
       .string()
-      .email("E-Mail não é válido.")
-      .required("E-Mail é um campo obrigatório."),
-    nome: yup.string().required("Nome é um campo obrigatório."),
-    sobrenome: yup.string().required("Sobrenome é um campo obrigatório."),
+      .email('E-Mail não é válido.')
+      .required('E-Mail é um campo obrigatório.'),
+    nome: yup.string().required('Nome é um campo obrigatório.'),
+    sobrenome: yup.string().required('Sobrenome é um campo obrigatório.'),
     senha: yup
       .string()
-      .min(8, "Deve conter no mínimo 8 caracteres.")
-      .required("Senha é um campo obrigatório."),
-    cargoId: yup.string().required("Cargo é um campo obrigatório."),
+      .min(8, 'Deve conter no mínimo 8 caracteres.')
+      .required('Senha é um campo obrigatório.'),
+    cargoId: yup.string().required('Cargo é um campo obrigatório.'),
   });
 
   const toggleResult = () => {
@@ -45,12 +50,12 @@ export default function User({cargos}: CreateUserProps) {
   };
 
   const handleCreate = ({
-                          nome,
-                          sobrenome,
-                          senha,
-                          email,
-                          cargoId,
-                        }: IResgister) => {
+    nome,
+    sobrenome,
+    senha,
+    email,
+    cargoId,
+  }: IResgister) => {
     setSubmiting(true);
 
     RegisterUser({
@@ -60,8 +65,7 @@ export default function User({cargos}: CreateUserProps) {
       email,
       cargoId,
     })
-      .then((res) => {
-      })
+      .then((res) => {})
       .catch((err) => {
         try {
           setResult({
@@ -70,7 +74,7 @@ export default function User({cargos}: CreateUserProps) {
           });
         } catch (error) {
           setResult({
-            text: "Algo deu errado, tente novamente mais tarde!",
+            text: 'Algo deu errado, tente novamente mais tarde!',
             status: false,
           });
         }
@@ -89,22 +93,22 @@ export default function User({cargos}: CreateUserProps) {
 
       <Formik
         initialValues={{
-          email: "",
-          nome: "",
-          sobrenome: "",
-          senha: "",
-          cargoId: "",
+          email: '',
+          nome: '',
+          sobrenome: '',
+          senha: '',
+          cargoId: '',
         }}
-        onSubmit={({sobrenome, senha, nome, email, cargoId}) =>
-          handleCreate({sobrenome, senha, nome, email, cargoId})
+        onSubmit={({ sobrenome, senha, nome, email, cargoId }) =>
+          handleCreate({ sobrenome, senha, nome, email, cargoId })
         }
         validationSchema={CreateUserSchema}
       >
-        {({errors, touched}) => (
+        {({ errors, touched }) => (
           <Form className="flex flex-col mx-auto my-24 justify-center items-center max-w-4xl px-4">
             <div className="w-full my-3">
               <label className="cursor-pointer" htmlFor="email">
-                E-Mail{" "}
+                E-Mail{' '}
                 <span className="text-xs italic">
                   (Será enviado um e-mail com a senha temporária)
                 </span>
@@ -114,7 +118,7 @@ export default function User({cargos}: CreateUserProps) {
                 type="email"
                 name="email"
                 error={errors.email && touched.email ? errors.email : null}
-                iconLeft={<Envelope size={24}/>}
+                iconLeft={<Envelope size={24} />}
               />
             </div>
 
@@ -126,7 +130,7 @@ export default function User({cargos}: CreateUserProps) {
                 id="nome"
                 name="nome"
                 error={errors.nome && touched.nome ? errors.nome : null}
-                iconLeft={<IconUser size={24}/>}
+                iconLeft={<IconUser size={24} />}
               />
             </div>
 
@@ -142,7 +146,7 @@ export default function User({cargos}: CreateUserProps) {
                     ? errors.sobrenome
                     : null
                 }
-                iconLeft={<IconUser size={24}/>}
+                iconLeft={<IconUser size={24} />}
               />
             </div>
 
@@ -152,7 +156,7 @@ export default function User({cargos}: CreateUserProps) {
               </label>
               <FormInput
                 id="senha"
-                type={viewPassword ? "text" : "password"}
+                type={viewPassword ? 'text' : 'password'}
                 name="senha"
                 error={errors.senha && touched.senha ? errors.senha : null}
                 iconRight={
@@ -177,8 +181,7 @@ export default function User({cargos}: CreateUserProps) {
               <label className="cursor-pointer" htmlFor="cargo">
                 Cargo
               </label>
-              <div
-                className="flex w-full items-center gap-3 py-3 px-3 rounded-md border-2 focus-within:ring-1 ring-secondary">
+              <div className="flex w-full items-center gap-3 py-3 px-3 rounded-md border-2 focus-within:ring-1 ring-secondary">
                 <Field
                   as="select"
                   name="cargoId"
@@ -201,7 +204,7 @@ export default function User({cargos}: CreateUserProps) {
               </div>
 
               {errors.cargoId && touched.cargoId ? (
-                <Error text={errors.cargoId}/>
+                <Error text={errors.cargoId} />
               ) : null}
             </div>
 
@@ -219,12 +222,12 @@ export default function User({cargos}: CreateUserProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const {["BearerToken"]: token} = parseCookies(ctx);
+  const { ['BearerToken']: token } = parseCookies(ctx);
 
   if (!token) {
     return {
       redirect: {
-        destination: "/user/login",
+        destination: '/user/login',
         permanent: false,
       },
     };
@@ -232,7 +235,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   let cargos;
   try {
-    const response = await api(ctx).get("cargo");
+    const response = await api(ctx).get('cargo');
 
     if (response.status === 200) {
       cargos = response.data.retorno;

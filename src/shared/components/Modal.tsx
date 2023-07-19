@@ -4,7 +4,7 @@ interface Modal {
   children: React.ReactNode;
 }
 
-export const Modal = ({isOpen, onClose, children}: Modal) => {
+export const Modal = ({ isOpen, onClose, children }: Modal) => {
   return (
     <>
       {isOpen ? (

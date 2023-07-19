@@ -1,5 +1,5 @@
-import Head from "next/head";
-import {useRouter} from "next/router";
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 export default function NotFound() {
   const navigate = useRouter();
@@ -16,7 +16,7 @@ export default function NotFound() {
 
       <div className="flex flex-col w-screen h-screen justify-center items-center select-none gap-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/gif/404.gif" alt="404 Not Found"/>
+        <img src="/gif/404.gif" alt="404 Not Found" />
 
         <div className="text-center">
           <h1 className="font-bold text-3xl my-3">

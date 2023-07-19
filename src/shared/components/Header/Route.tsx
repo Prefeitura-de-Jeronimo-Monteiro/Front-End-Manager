@@ -1,14 +1,14 @@
-import {IRoutes} from "@/shared/interfaces/RoutesData";
-import {CaretRight} from "@phosphor-icons/react";
-import Link from "next/link";
-import {Fragment} from "react";
+import { IRoutes } from '@/shared/interfaces/RoutesData';
+import { CaretRight } from '@phosphor-icons/react';
+import Link from 'next/link';
+import { Fragment } from 'react';
 
 interface RouteData extends IRoutes {
   onClick?: () => void;
   onClose?: () => void;
 }
 
-const Routes = ({href, title, icon, onClick, onClose, open}: RouteData) => {
+const Routes = ({ href, title, icon, onClick, onClose, open }: RouteData) => {
   return (
     <>
       <li className="select-none">
@@ -30,22 +30,22 @@ const Routes = ({href, title, icon, onClick, onClose, open}: RouteData) => {
             </span>
             <span className="mr-4">
               <CaretRight
-                className={`${open ? "rotate-90" : ""} transition-all`}
+                className={`${open ? 'rotate-90' : ''} transition-all`}
               />
             </span>
           </span>
         )}
       </li>
-      <hr/>
+      <hr />
     </>
   );
 };
 
 export const NestedRoutes = ({
-                               routes,
-                               onToggleOpen,
-                               onClose,
-                             }: {
+  routes,
+  onToggleOpen,
+  onClose,
+}: {
   routes: IRoutes[];
   onToggleOpen: (title: string) => void;
   onClose?: () => void;
