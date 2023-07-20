@@ -1,7 +1,7 @@
 interface CardProps {
   title: string;
   icon: React.ReactNode;
-  value: string;
+  value: number;
   description: string;
   onClick?: () => void;
 }
