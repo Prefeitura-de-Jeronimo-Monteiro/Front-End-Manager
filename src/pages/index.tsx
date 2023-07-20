@@ -1,16 +1,16 @@
 import { Card } from '@/shared/components/Card';
-import { BlackLoading, WhiteLoading } from '@/shared/components/Loading';
+import { IValues } from '@/shared/interfaces/ValuesData';
+import { ICalled } from '@/shared/interfaces/CalledData';
 import {
   getChamadoByStatus,
   getChamados,
 } from '@/shared/services/Called/view.service';
-import { User } from '@phosphor-icons/react';
+import { User, WhatsappLogo } from '@phosphor-icons/react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface DashboardProps {
   calleds: ICalled[];
@@ -21,14 +21,6 @@ export default function Dashboard({ calleds }: DashboardProps) {
   const router = useRouter();
 
   const cardInfos = [
-    {
-      id: '1',
-      title: 'Todos',
-      description: 'Todos os Chamados registrados no Sistema',
-      icon: <User size={24} />,
-      value: '12',
-      status: '',
-    },
     {
       id: '2',
       title: 'Em Andamento',
@@ -84,32 +76,20 @@ export default function Dashboard({ calleds }: DashboardProps) {
             value={cardInfo.value}
             description={cardInfo.description}
             onClick={() => {
-              if (cardInfo.status === '') {
-                requestCalled();
-              } else {
-                requestCalledByStatus(cardInfo.status);
-              }
+              requestCalledByStatus(cardInfo.status);
             }}
           />
         ))}
       </div>
 
-      <div className="py-4 px-8 w-screen">
-        <table className="min-w-full border text-center text-sm font-light dark:border-neutral-500">
-          <thead className="border-b font-medium dark:border-neutral-500">
+      <div className="py-4 px-8 w-screen mb-20">
+        <table className="min-w-full border text-center text-sm font-light">
+          <thead className="border-b font-medium">
             <tr>
-              <th className="border-r px-6 py-4 dark:border-neutral-500">
-                Nome
-              </th>
-              <th className="border-r px-6 py-4 dark:border-neutral-500">
-                CPF
-              </th>
-              <th className="border-r px-6 py-4 dark:border-neutral-500">
-                Descrição
-              </th>
-              <th className="border-r px-6 py-4 dark:border-neutral-500">
-                Telefone
-              </th>
+              <th className="border-r px-6 py-4">Nome</th>
+              <th className="border-r px-6 py-4">CPF</th>
+              <th className="border-r px-6 py-4">Descrição</th>
+              <th className="border-r px-6 py-4">Telefone</th>
             </tr>
           </thead>
           <tbody>
@@ -118,20 +98,31 @@ export default function Dashboard({ calleds }: DashboardProps) {
                 onClick={() => {
                   infoCalled(called.id);
                 }}
-                className="border-b dark:border-neutral-500 cursor-pointer"
+                className="border-b cursor-pointer"
                 key={called.id}
               >
-                <td className="whitespace-nowrap border-r px-6 py-4 font-medium dark:border-neutral-500">
+                <td className="whitespace-nowrap border-r px-6 py-4 font-medium">
                   {called.nome}
                 </td>
-                <td className="whitespace-nowrap border-r px-6 py-4 font-medium dark:border-neutral-500">
+                <td className="whitespace-nowrap border-r px-6 py-4 font-medium">
                   {called.cpf}
                 </td>
-                <td className="whitespace-nowrap border-r px-6 py-4 font-medium dark:border-neutral-500">
+                <td className="whitespace-nowrap border-r px-6 py-4 font-medium">
                   {called.descricao}
                 </td>
-                <td className="whitespace-nowrap border-r px-6 py-4 font-medium dark:border-neutral-500">
+                <td className="flex whitespace-nowrap border-r px-6 py-4 font-medium items-center gap-2 justify-center">
                   {called.telefone}
+
+                  <a
+                    href={`https://wa.me/55${called.telefone.replace(
+                      /\D/g,
+                      '',
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <WhatsappLogo size={24} />
+                  </a>
                 </td>
               </tr>
             ))}

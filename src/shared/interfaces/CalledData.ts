@@ -1,6 +1,9 @@
-interface ICalled {
+import { IBairro } from './BairroData';
+import { ISolicitacao } from './SolicitacaoData';
+
+export interface ICalled {
   atualizadoEm: string;
-  bairro: string;
+  bairro: IBairro;
   cpf: string;
   create_At: string;
   descricao: string;
@@ -10,7 +13,7 @@ interface ICalled {
   nome: string;
   pontoDeReferencia: string;
   prazo: string;
-  solicitacao: string;
+  solicitacao: ISolicitacao;
   status: 'AGUARDANDOVALIDACAO' | 'EMANDAMENTO' | 'CONCLUIDO' | 'VALIDADO';
   telefone: string;
 }
