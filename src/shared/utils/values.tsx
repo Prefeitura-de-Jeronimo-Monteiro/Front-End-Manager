@@ -32,7 +32,7 @@ export const filterValue = (data: ICalled[]) => {
       description: 'Chamados que estão validados e prontos para iniciar',
       value: 0,
       status: 'VALIDADO',
-      icon: <ThumbsUp size={32} />,
+      icon: <ThumbsUp size={24} />,
     },
     {
       id: '3',
