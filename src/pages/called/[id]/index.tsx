@@ -110,7 +110,7 @@ export default function Called({ called }: CalledProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 mx-4">
+      <div className="flex flex-col gap-4 mx-32">
         <h1 className="text-center font-semibold text-xl">
           Informações Pessoais
           <p className="text-center font-medium text-sm text-gray-600">
@@ -167,6 +167,7 @@ export default function Called({ called }: CalledProps) {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="hover:text-green-600 transition-all duration-300"
                 >
                   <WhatsappLogo size={24} />
                 </a>
@@ -183,6 +184,7 @@ export default function Called({ called }: CalledProps) {
             <tr>
               <th className="border-r px-6 py-4">Ponto de Referência</th>
               <th className="border-r px-6 py-4">Bairro</th>
+              <th className="border-r px-6 py-4">Imagem</th>
             </tr>
           </thead>
           <tbody>
@@ -192,6 +194,16 @@ export default function Called({ called }: CalledProps) {
               </td>
               <td className="whitespace-nowrap border-r px-6 py-4 font-medium">
                 {calledView.bairro.nome}
+              </td>
+              <td className="whitespace-nowrap border-r px-6 py-4 font-medium">
+                <a
+                  href={calledView.imagem}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline"
+                >
+                  Visualizar Imagem
+                </a>
               </td>
             </tr>
           </tbody>

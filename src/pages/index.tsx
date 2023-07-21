@@ -113,7 +113,7 @@ export default function Dashboard({ calleds }: DashboardProps) {
                   onClick={() => {
                     infoCalled(called.id);
                   }}
-                  className="border-b cursor-pointer"
+                  className="border-b cursor-pointer hover:bg-slate-200 transition-all duration-300"
                   key={called.id}
                 >
                   <td className="whitespace-nowrap border-r px-6 py-4 font-medium">
@@ -135,6 +135,7 @@ export default function Dashboard({ calleds }: DashboardProps) {
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="hover:text-green-600 transition-all duration-300"
                     >
                       <WhatsappLogo size={24} />
                     </a>

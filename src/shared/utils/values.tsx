@@ -28,7 +28,7 @@ export const filterValue = (data: ICalled[]) => {
     },
     {
       id: '2',
-      title: 'Validando',
+      title: 'Validado',
       description: 'Chamados que estão validados e prontos para iniciar',
       value: 0,
       status: 'VALIDADO',
