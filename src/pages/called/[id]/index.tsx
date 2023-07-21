@@ -131,7 +131,7 @@ export default function Called({ called }: CalledProps) {
           <div>
             <label htmlFor="prazo">Prazo final:</label>
             <Formik
-              initialValues={{ prazo: new Date().toISOString().slice(0, 16) }}
+              initialValues={{ prazo: '' }}
               onSubmit={(values) => requestAlterarPrazo(values.prazo)}
             >
               {({ values, handleSubmit }) => (
@@ -141,11 +141,12 @@ export default function Called({ called }: CalledProps) {
                       id="prazo"
                       type="datetime-local"
                       name="prazo"
-                      value={values.prazo}
-                      onBlur={(e) => (values.prazo = e.target.value.toString())}
-                      onChange={(e) =>
-                        (values.prazo = e.target.value.toString())
-                      }
+                      onBlur={(e) => {
+                        values.prazo = e.target.value.toString();
+                      }}
+                      onChange={(e) => {
+                        values.prazo = e.target.value.toString();
+                      }}
                       className="bg-transparent h-full w-full flex-1 placeholder:text-gray-400 outline-none"
                       min={new Date().toISOString().slice(0, 16)}
                     />
