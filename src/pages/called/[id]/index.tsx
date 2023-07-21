@@ -8,7 +8,7 @@ import {
   patchAlterarPrazo,
   patchAlterarStatus,
 } from '@/shared/services/Called/update.service';
-import { BlackLoading, WhiteLoading } from '@/shared/components/Loading';
+import { BlackLoading } from '@/shared/components/Loading';
 import { WhatsappLogo } from '@phosphor-icons/react';
 import { Formik } from 'formik';
 
@@ -127,6 +127,8 @@ export default function Called({ called }: CalledProps) {
               Alterar Status
             </button>
           </div>
+        ) : submmitAlterandoPrazo ? (
+          <BlackLoading />
         ) : (
           <div>
             <label htmlFor="prazo">Prazo final:</label>
@@ -160,11 +162,7 @@ export default function Called({ called }: CalledProps) {
                     className="bg-background-600 py-1 px-4 rounded-full text-white disabled:opacity-70"
                     disabled={submmitAlterandoPrazo}
                   >
-                    {submmitAlterandoPrazo ? (
-                      <WhiteLoading text="Alterando..." />
-                    ) : (
-                      'Definir'
-                    )}
+                    Definir
                   </button>
                 </div>
               )}
