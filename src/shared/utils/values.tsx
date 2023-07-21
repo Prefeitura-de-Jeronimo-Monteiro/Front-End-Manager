@@ -4,6 +4,7 @@ import {
   ClockCountdown,
   ThumbsUp,
   User,
+  X,
 } from '@phosphor-icons/react';
 import { ICalled } from '../interfaces/CalledData';
 
@@ -49,6 +50,14 @@ export const filterValue = (data: ICalled[]) => {
       value: 0,
       status: 'CONCLUIDO',
       icon: <Checks size={24} />,
+    },
+    {
+      id: '5',
+      title: 'Invalidado',
+      description: 'Chamados que não foram validados por motivos genéricos',
+      value: 0,
+      status: 'INVALIDADO',
+      icon: <X size={24} />,
     },
   ];
 

@@ -4,9 +4,13 @@ import { parseCookies } from 'nookies';
 import { ICalled } from '@/shared/interfaces/CalledData';
 import moment from 'moment';
 import { useState } from 'react';
-import { patchAlterarStatus } from '@/shared/services/Called/update.service';
-import { BlackLoading } from '@/shared/components/Loading';
+import {
+  patchAlterarPrazo,
+  patchAlterarStatus,
+} from '@/shared/services/Called/update.service';
+import { BlackLoading, WhiteLoading } from '@/shared/components/Loading';
 import { WhatsappLogo } from '@phosphor-icons/react';
+import { Formik } from 'formik';
 
 interface CalledProps {
   called: ICalled;
@@ -16,6 +20,9 @@ export default function Called({ called }: CalledProps) {
   const [alterando, setAlterando] = useState<boolean>(false);
   const [alterarSolicitacao, setAlterarSolicitacao] = useState<boolean>(false);
   const [calledView, setCalledView] = useState<ICalled>(called);
+  const [alterandoPrazo, setAlterandoPrazo] = useState<boolean>(false);
+  const [submmitAlterandoPrazo, setSubmmitAlterandoPrazo] =
+    useState<boolean>(false);
 
   const status = () => {
     switch (calledView.status) {
@@ -32,6 +39,10 @@ export default function Called({ called }: CalledProps) {
 
   const isAlterarSolicitacao = () => {
     setAlterarSolicitacao(!alterarSolicitacao);
+  };
+
+  const toggleAlterarPrazo = () => {
+    setAlterandoPrazo(!alterandoPrazo);
   };
 
   const resetCalled = () => {
@@ -57,9 +68,25 @@ export default function Called({ called }: CalledProps) {
       });
   };
 
+  const requestAlterarPrazo = (prazo: string) => {
+    setSubmmitAlterandoPrazo(true);
+
+    patchAlterarPrazo({ chamadoId: calledView.id, deadLineDate: prazo })
+      .then(() => {
+        setSubmmitAlterandoPrazo(false);
+        setAlterandoPrazo(false);
+        resetCalled();
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setSubmmitAlterandoPrazo(false);
+        }, 1000);
+      });
+  };
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between gap-4 mx-4 mt-2">
+      <div className="flex flex-wrap justify-between gap-4 mx-4 mt-2 items-center">
         {alterando ? (
           <BlackLoading />
         ) : alterarSolicitacao ? (
@@ -87,10 +114,60 @@ export default function Called({ called }: CalledProps) {
           </div>
         )}
 
-        {calledView.prazo && (
+        {!alterandoPrazo && calledView.prazo ? (
+          <div className="flex gap-2 items-center">
+            <p>
+              Prazo final:
+              {moment(calledView.prazo).format('DD/MM/YYYY')}
+            </p>
+            <button
+              onClick={toggleAlterarPrazo}
+              className="bg-background-600 py-1 px-4 rounded-full text-white"
+            >
+              Alterar Status
+            </button>
+          </div>
+        ) : (
           <div>
-            Prazo final:
-            {moment(calledView.prazo).format('DD/MM/YYYY')}
+            <label htmlFor="prazo">Prazo final:</label>
+            <Formik
+              initialValues={{ prazo: new Date().toISOString().slice(0, 16) }}
+              onSubmit={(values) => requestAlterarPrazo(values.prazo)}
+            >
+              {({ values, handleSubmit }) => (
+                <div className="flex items-center gap-2">
+                  <div className="flex w-full items-center gap-3 py-3 px-3 rounded-md border-2 focus-within:ring-1 ring-secondary">
+                    <input
+                      id="prazo"
+                      type="datetime-local"
+                      name="prazo"
+                      value={values.prazo}
+                      onBlur={(e) => (values.prazo = e.target.value.toString())}
+                      onChange={(e) =>
+                        (values.prazo = e.target.value.toString())
+                      }
+                      className="bg-transparent h-full w-full flex-1 placeholder:text-gray-400 outline-none"
+                      min={new Date().toISOString().slice(0, 16)}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    onClick={() => {
+                      handleSubmit();
+                    }}
+                    className="bg-background-600 py-1 px-4 rounded-full text-white disabled:opacity-70"
+                    disabled={submmitAlterandoPrazo}
+                  >
+                    {submmitAlterandoPrazo ? (
+                      <WhiteLoading text="Alterando..." />
+                    ) : (
+                      'Definir'
+                    )}
+                  </button>
+                </div>
+              )}
+            </Formik>
           </div>
         )}
 

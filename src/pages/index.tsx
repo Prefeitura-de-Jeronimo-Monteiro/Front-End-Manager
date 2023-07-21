@@ -72,7 +72,9 @@ export default function Dashboard({ calleds }: DashboardProps) {
       </button>
       <button
         className="bg-background-600 py-1 px-4 ml-2 mt-2 rounded-full text-white"
-        onClick={requestCalled}
+        onClick={() => {
+          setViewCalleds(calleds);
+        }}
       >
         Remover Filtro
       </button>

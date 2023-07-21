@@ -31,7 +31,7 @@ export default function Login() {
     usuario: yup
       .string()
       .email('E-Mail não é válido')
-      .required('Nome é um campo obrigatório'),
+      .required('E-Mail é um campo obrigatório'),
     senha: yup.string().required('Senha é um campo obrigatório'),
   });
 

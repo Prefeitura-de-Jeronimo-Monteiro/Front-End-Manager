@@ -7,3 +7,11 @@ export const patchAlterarStatus = ({
   id: string;
   status: string;
 }) => api().patch('chamado/status', { id, status });
+
+export const patchAlterarPrazo = ({
+  chamadoId,
+  deadLineDate,
+}: {
+  chamadoId: string;
+  deadLineDate: string;
+}) => api().patch('chamado/prazo', { chamadoId, deadLineDate });
