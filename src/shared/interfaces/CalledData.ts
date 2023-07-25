@@ -14,6 +14,11 @@ export interface ICalled {
   pontoDeReferencia: string;
   prazo: string;
   solicitacao: ISolicitacao;
-  status: 'AGUARDANDOVALIDACAO' | 'EMANDAMENTO' | 'CONCLUIDO' | 'VALIDADO';
+  status:
+    | 'AGUARDANDOVALIDACAO'
+    | 'EMANDAMENTO'
+    | 'CONCLUIDO'
+    | 'VALIDADO'
+    | 'INVALIDADO';
   telefone: string;
 }

@@ -32,6 +32,8 @@ export default function Called({ called }: CalledProps) {
         return 'Concluído';
       case 'EMANDAMENTO':
         return 'Em Andamento';
+      case 'INVALIDADO':
+        return 'Invalidado';
       default:
         return 'Aguardando Validação';
     }
@@ -57,7 +59,9 @@ export default function Called({ called }: CalledProps) {
     setAlterando(true);
 
     patchAlterarStatus({ id: calledView.id, status: event.target.value })
-      .then(() => {
+      .then((res) => {
+        console.log(res);
+
         setAlterarSolicitacao(false);
         resetCalled();
       })
@@ -100,6 +104,7 @@ export default function Called({ called }: CalledProps) {
               <option value="VALIDADO">Validado</option>
               <option value="EMANDAMENTO">Em Andamento</option>
               <option value="CONCLUIDO">Concluído</option>
+              <option value="INVALIDADO">Invalidado</option>
             </select>
           </div>
         ) : (

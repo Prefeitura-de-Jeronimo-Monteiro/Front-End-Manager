@@ -66,6 +66,7 @@ export const filterValue = (data: ICalled[]) => {
     'EMANDAMENTO',
     'CONCLUIDO',
     'VALIDADO',
+    'INVALIDADO',
   ];
 
   let array1: { status: string; value: number }[] = [];
