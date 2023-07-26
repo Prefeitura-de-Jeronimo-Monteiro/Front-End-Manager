@@ -129,7 +129,7 @@ export default function Called({ called }: CalledProps) {
               onClick={toggleAlterarPrazo}
               className="bg-background-600 py-1 px-4 rounded-full text-white"
             >
-              Alterar Status
+              Alterar Prazo
             </button>
           </div>
         ) : submmitAlterandoPrazo ? (
