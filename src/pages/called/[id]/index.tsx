@@ -11,6 +11,9 @@ import {
 import { BlackLoading } from '@/shared/components/Loading';
 import { WhatsappLogo } from '@phosphor-icons/react';
 import { Formik } from 'formik';
+import { Modal } from '@/shared/components/Modal';
+import * as yup from 'yup';
+import { Error as TextError } from '@/shared/components/Error';
 
 interface CalledProps {
   called: ICalled;
@@ -88,6 +91,26 @@ export default function Called({ called }: CalledProps) {
       });
   };
 
+  const indefinirPrazo = () => {
+    setSubmmitAlterandoPrazo(true);
+
+    patchAlterarPrazo({ chamadoId: calledView.id, deadLineDate: null })
+      .then(() => {
+        setSubmmitAlterandoPrazo(false);
+        setAlterandoPrazo(false);
+        resetCalled();
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setSubmmitAlterandoPrazo(false);
+        }, 1000);
+      });
+  };
+
+  const FormSchemaPrazo = yup.object().shape({
+    prazo: yup.string().required('Campo Obrigatório'),
+  });
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap justify-between gap-4 mx-4 mt-2 items-center">
@@ -119,7 +142,7 @@ export default function Called({ called }: CalledProps) {
           </div>
         )}
 
-        {!alterandoPrazo && calledView.prazo ? (
+        {calledView.prazo ? (
           <div className="flex gap-2 items-center">
             <p>
               Prazo final:
@@ -135,44 +158,12 @@ export default function Called({ called }: CalledProps) {
         ) : submmitAlterandoPrazo ? (
           <BlackLoading />
         ) : (
-          <div>
-            <label htmlFor="prazo">Prazo final:</label>
-            <Formik
-              initialValues={{ prazo: '' }}
-              onSubmit={(values) => requestAlterarPrazo(values.prazo)}
-            >
-              {({ values, handleSubmit }) => (
-                <div className="flex items-center gap-2">
-                  <div className="flex w-full items-center gap-3 py-3 px-3 rounded-md border-2 focus-within:ring-1 ring-secondary">
-                    <input
-                      id="prazo"
-                      type="datetime-local"
-                      name="prazo"
-                      onBlur={(e) => {
-                        values.prazo = e.target.value.toString();
-                      }}
-                      onChange={(e) => {
-                        values.prazo = e.target.value.toString();
-                      }}
-                      className="bg-transparent h-full w-full flex-1 placeholder:text-gray-400 outline-none"
-                      min={new Date().toISOString().slice(0, 16)}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    onClick={() => {
-                      handleSubmit();
-                    }}
-                    className="bg-background-600 py-1 px-4 rounded-full text-white disabled:opacity-70"
-                    disabled={submmitAlterandoPrazo}
-                  >
-                    Definir
-                  </button>
-                </div>
-              )}
-            </Formik>
-          </div>
+          <button
+            onClick={toggleAlterarPrazo}
+            className="bg-background-600 py-1 px-4 rounded-full text-white"
+          >
+            Definir Prazo
+          </button>
         )}
 
         <p>
@@ -185,19 +176,23 @@ export default function Called({ called }: CalledProps) {
             {moment(calledView.atualizadoEm).format('DD/MM/YYYY')}
           </div>
         )}
-
-        <div>
-          <p className="font-semibold">{calledView.solicitacao.nome}</p>
-        </div>
       </div>
 
       <div className="flex flex-col gap-4 mx-32">
-        <h1 className="text-center font-semibold text-xl">
-          Informações Pessoais
-          <p className="text-center font-medium text-sm text-gray-600">
+        <div>
+          <h1 className="text-center font-semibold text-xl">
+            Informações Pessoais
+          </h1>
+
+          <p className="flex items-center gap-2 justify-center font-normal text-md">
+            <span className="text-sm text-gray-600">Descrição: </span>
             {calledView.descricao}
           </p>
-        </h1>
+          <p className="flex items-center gap-2 justify-center font-normal text-md">
+            <span className="text-sm text-gray-600">Tipo de Solicitação: </span>
+            {calledView.solicitacao.nome}
+          </p>
+        </div>
 
         <table className="border text-center text-sm font-light">
           <thead className="border-b font-medium">
@@ -290,6 +285,70 @@ export default function Called({ called }: CalledProps) {
           </tbody>
         </table>
       </div>
+      <Modal
+        isOpen={alterandoPrazo}
+        onClose={() => {
+          setAlterandoPrazo(false);
+        }}
+      >
+        <>
+          <Formik
+            initialValues={{ prazo: '' }}
+            onSubmit={(values) => requestAlterarPrazo(values.prazo)}
+            validationSchema={FormSchemaPrazo}
+          >
+            {({ errors, values, touched, handleSubmit }) => (
+              <div className="flex items-center gap-4 flex-col">
+                <div>
+                  <label htmlFor="prazo">Prazo final:</label>
+
+                  <div className="flex w-full items-center gap-3 py-3 px-3 rounded-md border-2 focus-within:ring-1 ring-secondary">
+                    <input
+                      id="prazo"
+                      type="datetime-local"
+                      name="prazo"
+                      onBlur={(e) => {
+                        values.prazo = e.target.value.toString();
+                      }}
+                      onChange={(e) => {
+                        values.prazo = e.target.value.toString();
+                      }}
+                      className="bg-transparent h-full w-full flex-1 placeholder:text-gray-400 outline-none"
+                      min={new Date().toISOString().slice(0, 16)}
+                    />
+                  </div>
+                  {errors.prazo && touched.prazo ? (
+                    <TextError text={errors.prazo} />
+                  ) : null}
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    type="submit"
+                    onClick={() => {
+                      handleSubmit();
+                    }}
+                    className="py-2 px-4 bg-white text-black rounded font-semibold disabled:opacity-70"
+                    disabled={submmitAlterandoPrazo}
+                  >
+                    Definir
+                  </button>
+                  <button
+                    type="submit"
+                    onClick={() => {
+                      indefinirPrazo();
+                    }}
+                    className="py-2 px-4 bg-white text-black rounded font-semibold disabled:opacity-70"
+                    disabled={submmitAlterandoPrazo}
+                  >
+                    Indefinir Prazo
+                  </button>
+                </div>
+              </div>
+            )}
+          </Formik>
+        </>
+      </Modal>
     </div>
   );
 }

@@ -3,7 +3,6 @@ import {
   Checks,
   ClockCountdown,
   ThumbsUp,
-  User,
   X,
 } from '@phosphor-icons/react';
 import { ICalled } from '../interfaces/CalledData';

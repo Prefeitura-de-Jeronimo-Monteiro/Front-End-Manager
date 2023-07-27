@@ -13,5 +13,5 @@ export const patchAlterarPrazo = ({
   deadLineDate,
 }: {
   chamadoId: string;
-  deadLineDate: string;
+  deadLineDate: string | null;
 }) => api().patch('chamado/prazo', { chamadoId, deadLineDate });
