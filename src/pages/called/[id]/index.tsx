@@ -16,13 +16,13 @@ import * as yup from 'yup';
 import { Error as TextError } from '@/shared/components/Error';
 
 interface CalledProps {
-  called: ICalled;
+  called: ICalled[];
 }
 
 export default function Called({ called }: CalledProps) {
   const [alterando, setAlterando] = useState<boolean>(false);
   const [alterarSolicitacao, setAlterarSolicitacao] = useState<boolean>(false);
-  const [calledView, setCalledView] = useState<ICalled>(called);
+  const [calledView, setCalledView] = useState<ICalled>(called[0]);
   const [alterandoPrazo, setAlterandoPrazo] = useState<boolean>(false);
   const [submmitAlterandoPrazo, setSubmmitAlterandoPrazo] =
     useState<boolean>(false);
@@ -52,7 +52,7 @@ export default function Called({ called }: CalledProps) {
 
   const resetCalled = () => {
     getChamadoById({ id: calledView.id }).then((res) =>
-      setCalledView(res.data.retorno),
+      setCalledView(res.data.retorno[0]),
     );
   };
 
@@ -63,8 +63,6 @@ export default function Called({ called }: CalledProps) {
 
     patchAlterarStatus({ id: calledView.id, status: event.target.value })
       .then((res) => {
-        console.log(res);
-
         setAlterarSolicitacao(false);
         resetCalled();
       })
