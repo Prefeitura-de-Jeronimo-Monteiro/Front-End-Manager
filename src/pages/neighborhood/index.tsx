@@ -230,7 +230,7 @@ export default function Neighborhood({
       </div>
 
       {viewNeighborhoods.length > 0 ? (
-        <div className="my-4 mx-8 w-screen">
+        <div className="my-4 mx-8 w-screen mb-24">
           <table className="w-full">
             <thead className="text-left">
               <tr>

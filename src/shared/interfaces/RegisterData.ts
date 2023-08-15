@@ -3,5 +3,4 @@ export interface IResgister {
   nome: string;
   sobrenome: string;
   senha: string;
-  cargoId: string;
 }

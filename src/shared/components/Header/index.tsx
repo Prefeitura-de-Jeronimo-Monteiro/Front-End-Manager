@@ -7,6 +7,11 @@ import { Drawer } from '../Drawer';
 import { IRoutes } from '../../interfaces/RoutesData';
 import { RoutesProps } from '../../routes';
 import { NestedRoutes } from './Route';
+import { Modal } from '../Modal';
+import { Form, Formik } from 'formik';
+import { FormInput } from '../Input';
+import { updatePassword } from '@/shared/services/User/update.service';
+import * as yup from 'yup';
 
 interface HeaderProps {
   isLogin: boolean;
@@ -17,13 +22,18 @@ export const Header = ({ isLogin }: HeaderProps) => {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const { logout, user } = useContext(AuthContext);
   const [routes, setRoutes] = useState<IRoutes[]>(RoutesProps);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+
+  const toggleModal = () => {
+    setModalIsOpen((state) => !state);
+  };
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((state) => !state);
   };
 
   const toggleDrawer = () => {
-    setIsOpenDrawer(!isOpenDrawer);
+    setIsOpenDrawer((state) => !state);
   };
 
   const handleToggleOpen = (title: string) => {
@@ -35,6 +45,16 @@ export const Header = ({ isLogin }: HeaderProps) => {
     });
 
     setRoutes(updatedRoutes);
+  };
+
+  const FormSchema = yup.object().shape({
+    senhaNova: yup.string().required(),
+  });
+
+  const submit = (senhaNova: string) => {
+    updatePassword({ senhaNova, idUsuario: user.id || '' }).then(() => {
+      toggleModal();
+    });
   };
 
   return (
@@ -65,14 +85,16 @@ export const Header = ({ isLogin }: HeaderProps) => {
 
               {isOpen && (
                 <>
-                  <div className="absolute border top-full text-center right-0 mt-3 w-28 bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
-                    <Link
-                      href="/user/update"
-                      className="block px-4 py-2 hover:bg-gray-100 rounded-ss-lg rounded-se-lg"
-                      onClick={toggleDropdown}
+                  <div className="absolute border top-full text-center right-0 mt-3 w-40 bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
+                    <button
+                      className="block w-full px-4 py-2 hover:bg-gray-100 rounded-ss-lg rounded-se-lg"
+                      onClick={() => {
+                        toggleDropdown();
+                        toggleModal();
+                      }}
                     >
-                      Perfil
-                    </Link>
+                      Trocar Senha
+                    </button>
 
                     <button
                       onClick={() => {
@@ -96,6 +118,41 @@ export const Header = ({ isLogin }: HeaderProps) => {
           )}
         </>
       ) : null}
+
+      <Modal isOpen={modalIsOpen} onClose={toggleModal}>
+        <Formik
+          initialValues={{ senhaNova: '' }}
+          onSubmit={(values) => submit(values.senhaNova)}
+          validationSchema={FormSchema}
+        >
+          {({ errors }) => (
+            <Form className="items-center flex justify-center flex-col px-8 py-4">
+              <div className="text-center mb-2">
+                <h1 className="font-bold text-3xl">Alterar senha</h1>
+                <span className="font-semibold text-gray-300 text-sm">
+                  Tenha certeza que irá se lembrar dessa senha
+                </span>
+              </div>
+
+              <div className="w-full my-2">
+                <label htmlFor="senhaNova">Nova Senha</label>
+                <FormInput
+                  id="senhaNova"
+                  name="senhaNova"
+                  error={errors.senhaNova || null}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="bg-gray-100 font-bold py-1 px-4 ml-2 mt-2 rounded-full text-black"
+              >
+                Trocar Senha
+              </button>
+            </Form>
+          )}
+        </Formik>
+      </Modal>
     </>
   );
 };

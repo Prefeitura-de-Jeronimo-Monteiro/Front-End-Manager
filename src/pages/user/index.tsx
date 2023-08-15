@@ -49,13 +49,7 @@ export default function User({ cargos }: CreateUserProps) {
     setViewPassword(!viewPassword);
   };
 
-  const handleCreate = ({
-    nome,
-    sobrenome,
-    senha,
-    email,
-    cargoId,
-  }: IResgister) => {
+  const handleCreate = ({ nome, sobrenome, senha, email }: IResgister) => {
     setSubmiting(true);
 
     RegisterUser({
@@ -63,7 +57,6 @@ export default function User({ cargos }: CreateUserProps) {
       sobrenome,
       senha,
       email,
-      cargoId,
     })
       .then((res) => {})
       .catch((err) => {
@@ -99,8 +92,8 @@ export default function User({ cargos }: CreateUserProps) {
           senha: '',
           cargoId: '',
         }}
-        onSubmit={({ sobrenome, senha, nome, email, cargoId }) =>
-          handleCreate({ sobrenome, senha, nome, email, cargoId })
+        onSubmit={({ sobrenome, senha, nome, email }) =>
+          handleCreate({ sobrenome, senha, nome, email })
         }
         validationSchema={CreateUserSchema}
       >
@@ -175,37 +168,6 @@ export default function User({ cargos }: CreateUserProps) {
                   )
                 }
               />
-            </div>
-
-            <div className="flex flex-col w-full">
-              <label className="cursor-pointer" htmlFor="cargo">
-                Cargo
-              </label>
-              <div className="flex w-full items-center gap-3 py-3 px-3 rounded-md border-2 focus-within:ring-1 ring-secondary">
-                <Field
-                  as="select"
-                  name="cargoId"
-                  id="cargo"
-                  className="bg-transparent h-full w-full flex-1 outline-none cursor-pointer"
-                >
-                  <option value="" disabled>
-                    Selecione um cargo
-                  </option>
-                  {cargos.map((cargo) => (
-                    <option
-                      value={cargo.id}
-                      key={cargo.id}
-                      className="text-black"
-                    >
-                      {cargo.nome}
-                    </option>
-                  ))}
-                </Field>
-              </div>
-
-              {errors.cargoId && touched.cargoId ? (
-                <Error text={errors.cargoId} />
-              ) : null}
             </div>
 
             <button
